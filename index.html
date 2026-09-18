@@ -160,15 +160,27 @@
           <div class="car-ground-reflection"></div>
           
           <!-- Realistic Vehicle Container with Dynamic Lighting -->
-          <div class="car-model-wrapper" id="car-model-wrapper">
-            <img
-              src="assets/images/hero-car.jpg"
-              alt="BMW M5 Competition — Autonomous 360 Automotive Product Showcase"
-              class="hero-car-img"
-              id="hero-car-img"
-            />
-            <div class="car-lighting-overlay" id="car-lighting-overlay"></div>
-          </div>
+         <div class="car-model-wrapper" id="car-model-wrapper">
+  <div
+    id="bmw-3d-container"
+    aria-label="Interactive 3D BMW M4 Competition showcase"
+  >
+    <canvas id="bmw-3d-canvas"></canvas>
+
+    <div class="car-3d-loading" id="car-3d-loading">
+      <span class="car-3d-loading-label">LOADING VEHICLE</span>
+
+      <span class="car-3d-loading-bar">
+        <span id="car-3d-loading-progress"></span>
+      </span>
+    </div>
+  </div>
+
+  <div
+    class="car-lighting-overlay"
+    id="car-lighting-overlay"
+  ></div>
+</div>
 
           <!-- Dynamic SVG Vector Inspection Connector Layer -->
           <svg class="inspection-svg-canvas" id="inspection-svg-canvas" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -753,7 +765,9 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="js/main.js"></script>
-  <script src="js/car3d.js"></script>
+  <script src="js/three.min.js"></script>
+<script src="js/loaders/GLTFLoader.js"></script>
+<script src="js/main.js"></script>
+<script src="js/car3d.js"></script>
 </body>
 </html>
