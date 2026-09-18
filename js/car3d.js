@@ -287,9 +287,32 @@
           const isWheel =
             /wheel|rim|alloy/.test(label);
 
-          // Exterior paint: rich black, glossy, metallic.
-          // Interior is kept dark but slightly less reflective.
-          if (!isLamp && !isGlass && !isTyre && !isBrake && !isChrome && !isWheel) {
+          // Explicitly identify painted body panels. Some source assets carry
+          // white paint as a texture; removing that paint map is essential so
+          // the requested deep-black finish is actually rendered black.
+          const isBodyPaint =
+            /body|paint|car.?paint|hood|bonnet|trunk|door|fender|quarter|bumper|roof|side.?panel|front.?panel|rear.?panel|sill|rocker|spoiler/.test(label);
+
+          // Exterior paint: true deep-black glossy automotive finish.
+          // Remove a light source texture from painted panels so it cannot
+          // override the black base color.
+          if (isBodyPaint && !isLamp && !isGlass && !isTyre && !isBrake && !isChrome && !isWheel) {
+            if (material.map) {
+              material.map = null;
+            }
+            if (material.color) {
+              material.color.setHex(0x030407);
+            }
+            if ('metalness' in material) {
+              material.metalness = 0.9;
+            }
+            if ('roughness' in material) {
+              material.roughness = 0.14;
+            }
+            if ('envMapIntensity' in material) {
+              material.envMapIntensity = 1.6;
+            }
+          } else if (!isLamp && !isGlass && !isTyre && !isBrake && !isChrome && !isWheel) {
             if (material.color) {
               material.color.setHex(isInterior ? 0x07090d : 0x080b10);
             }
