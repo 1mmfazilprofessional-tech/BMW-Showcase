@@ -256,6 +256,17 @@
         object.receiveShadow = true;
 
         const objectLabel = (object.name || '').toLowerCase();
+        // Clone materials per mesh so the black body treatment cannot
+        // accidentally recolor wheels, glass, interior or lamp materials
+        // that share the same source material.
+        if (Array.isArray(object.material)) {
+          object.material = object.material.map(function(material) {
+            return material && material.clone ? material.clone() : material;
+          });
+        } else if (object.material && object.material.clone) {
+          object.material = object.material.clone();
+        }
+
         const materials = Array.isArray(object.material)
           ? object.material
           : [object.material];
@@ -361,7 +372,7 @@
             if (material.color) material.color.setHex(0xdff6ff);
             if (material.emissive) {
               material.emissive.setHex(0xc9efff);
-              material.emissiveIntensity = 3.5;
+              material.emissiveIntensity = 5.0;
             }
             if ('metalness' in material) material.metalness = 0.05;
             if ('roughness' in material) material.roughness = 0.08;
@@ -385,9 +396,9 @@
           if (!material) return;
 
           if (/head.?light|headlamp|led|lamp/.test(name) && material.emissive) {
-            material.emissive.setHex(0xe8f7ff);
+            material.emissive.setHex(0xbfefff);
             material.emissiveIntensity = 3.2;
-            if (material.color) material.color.setHex(0xd9f1ff);
+            if (material.color) material.color.setHex(0xd9f8ff);
             if ('roughness' in material) material.roughness = 0.12;
             material.needsUpdate = true;
           }
@@ -412,7 +423,7 @@
         [-0.88, 0.72, 2.28],
         [ 0.88, 0.72, 2.28]
       ].forEach(function(position) {
-        const headLight = new THREE.PointLight(0xdff7ff, 4.5, 3.8, 2);
+        const headLight = new THREE.PointLight(0xbfefff, 6.5, 4.5, 2);
         headLight.position.set(position[0], position[1], position[2]);
         carModel.add(headLight);
       });
