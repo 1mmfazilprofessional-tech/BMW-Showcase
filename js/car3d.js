@@ -160,6 +160,37 @@
 
   scene.add(platform);
 
+  // ─── BLUE SHOWROOM LIGHT RINGS ───────────────────────────────
+  const ringMaterial = new THREE.MeshBasicMaterial({
+    color: 0x1688ff,
+    transparent: true,
+    opacity: 0.9
+  });
+
+  const ringOuter = new THREE.Mesh(
+    new THREE.TorusGeometry(3.42, 0.025, 12, 128),
+    ringMaterial
+  );
+  ringOuter.rotation.x = Math.PI / 2;
+  ringOuter.position.y = 0.11;
+  scene.add(ringOuter);
+
+  const ringInner = new THREE.Mesh(
+    new THREE.TorusGeometry(2.95, 0.012, 10, 128),
+    new THREE.MeshBasicMaterial({
+      color: 0x00d4ff,
+      transparent: true,
+      opacity: 0.7
+    })
+  );
+  ringInner.rotation.x = Math.PI / 2;
+  ringInner.position.y = 0.115;
+  scene.add(ringInner);
+
+  const bluePlatformLight = new THREE.PointLight(0x1688ff, 2.5, 8, 2);
+  bluePlatformLight.position.set(0, 0.6, 0);
+  scene.add(bluePlatformLight);
+
   // ─── BMW MODEL ROOT ──────────────────────────────────────────
   const carRoot = new THREE.Group();
 
@@ -175,7 +206,7 @@
   const loader = new THREE.GLTFLoader();
 
   const MODEL_URL =
-    'assets/models/bmw_m4_competition_m_package.glb';
+    'https://raw.githubusercontent.com/VIHAR2212/open-road/main/public/models/2022_bmw_m5_cs.glb';
 
   loader.load(
     MODEL_URL,
@@ -192,6 +223,25 @@
         if (object.isMesh) {
 
           modelMeshes.push(object);
+
+
+          const objectLabel = (object.name || '').toLowerCase();
+          const isBodyPiece =
+            /body|hood|bonnet|trunk|door|fender|bumper|roof|quarter|side|skirt|panel/.test(objectLabel);
+
+          if (isBodyPiece && object.material) {
+            const materials = Array.isArray(object.material)
+              ? object.material
+              : [object.material];
+
+            materials.forEach(material => {
+              if (!material) return;
+              if (material.color) material.color.setHex(0x050608);
+              if ('metalness' in material) material.metalness = Math.max(material.metalness || 0, 0.72);
+              if ('roughness' in material) material.roughness = Math.min(material.roughness ?? 0.35, 0.28);
+              material.needsUpdate = true;
+            });
+          }
 
           object.castShadow = true;
           object.receiveShadow = true;
@@ -246,7 +296,9 @@
 
       scaledBox.getCenter(scaledCenter);
 
+      carModel.position.x -= scaledCenter.x;
       carModel.position.y -= scaledBox.min.y;
+      carModel.position.z -= scaledCenter.z;
 
       carRoot.visible = true;
 
@@ -303,113 +355,74 @@
   const vehicleParts = [
     {
       id: 'engine',
-      objectNames: [
-        'Engine',
-        'engine',
-        'Engine_001'
-      ],
+      objectNames: ['engine', 'motor'],
       system: 'engine',
       tag: 'POWERTRAIN',
-      title: '4.4L M TwinPower Turbo V8',
-      desc:
-        'Real engine geometry from the BMW model.',
+      title: 'M Performance Powertrain',
+      desc: 'Real engine geometry highlighted directly on the loaded BMW M5 3D model.',
       camera: [2.7, 1.3, 4.0]
     },
-
     {
       id: 'headlights',
-      objectNames: [
-        'Front Left Headlight',
-        'Front Right Headlight'
-      ],
+      objectNames: ['headlight', 'head light', 'light'],
       system: 'aerodynamics',
       tag: 'ILLUMINATION',
-      title: 'BMW Adaptive Headlight System',
-      desc:
-        'Actual headlight meshes highlighted directly on the 3D vehicle.',
+      title: 'BMW M Adaptive Lighting',
+      desc: 'Actual lighting geometry highlighted on the 3D vehicle.',
       camera: [2.8, 1.3, 4.4]
     },
-
     {
       id: 'grille',
-      objectNames: [
-        'Front Grille'
-      ],
+      objectNames: ['grille', 'kidney'],
       system: 'aerodynamics',
       tag: 'AERODYNAMICS',
-      title: 'BMW Kidney Grille',
-      desc:
-        'Actual front grille geometry from the loaded BMW model.',
+      title: 'Signature Kidney Grille',
+      desc: 'Actual grille geometry highlighted on the 3D vehicle.',
       camera: [2.5, 1.15, 4.8]
     },
-
     {
       id: 'wheels',
-      objectNames: [
-        'Front Left Wheel',
-        'Front Right Wheel',
-        'Rear Left Wheel',
-        'Rear Right Wheel'
-      ],
+      objectNames: ['wheel', 'tire', 'tyre'],
       system: 'braking',
       tag: 'WHEELS',
       title: 'M Performance Wheels',
-      desc:
-        'Actual wheel geometry highlighted on the vehicle.',
+      desc: 'Actual wheel geometry highlighted on the vehicle.',
       camera: [3.4, 0.75, 2.8]
     },
-
     {
       id: 'mirrors',
-      objectNames: [
-        'Front Left Mirror',
-        'Front Right Mirror'
-      ],
+      objectNames: ['mirror'],
       system: 'aerodynamics',
       tag: 'AERODYNAMICS',
       title: 'M Aerodynamic Mirrors',
-      desc:
-        'Actual mirror geometry highlighted on the vehicle.',
+      desc: 'Actual mirror geometry highlighted on the vehicle.',
       camera: [3.2, 1.65, 3.4]
     },
-
     {
       id: 'cockpit',
-      objectNames: [
-        'Dashboard',
-        'Seats'
-      ],
+      objectNames: ['dashboard', 'seat', 'interior', 'cockpit'],
       system: 'cockpit',
       tag: 'DIGITAL INTERFACE',
       title: 'M Cockpit',
-      desc:
-        'Interior geometry available in the loaded 3D model.',
+      desc: 'Interior geometry available in the loaded 3D model.',
       camera: [2.8, 1.8, 2.5]
     },
-
     {
       id: 'spoiler',
-      objectNames: [
-        'Spoiler'
-      ],
+      objectNames: ['spoiler', 'wing'],
       system: 'aerodynamics',
       tag: 'AERODYNAMICS',
-      title: 'Rear Spoiler',
-      desc:
-        'Actual spoiler geometry highlighted on the BMW.',
+      title: 'Rear Aerodynamic Wing',
+      desc: 'Actual rear aerodynamic geometry highlighted on the BMW.',
       camera: [-3.0, 1.4, -3.5]
     },
-
     {
       id: 'exhaust',
-      objectNames: [
-        'Exhaust'
-      ],
+      objectNames: ['exhaust', 'muffler', 'tailpipe'],
       system: 'aerodynamics',
       tag: 'EXHAUST',
       title: 'M Performance Exhaust',
-      desc:
-        'Actual exhaust geometry highlighted on the vehicle.',
+      desc: 'Actual exhaust geometry highlighted on the vehicle.',
       camera: [-3.2, 0.8, -3.7]
     }
   ];
@@ -1302,12 +1315,12 @@
 
   // ─── INITIAL STATUS ─────────────────────────────────────────
   updateStatus(
-    'LOADING REAL BMW 3D MODEL',
+    'LOADING REAL BMW M5 3D MODEL',
     'INITIALIZING'
   );
 
   console.log(
-    '%cBMW REAL 3D SHOWROOM ENGINE',
+    '%cBMW M5 REAL 3D SHOWROOM ENGINE',
     'color:#00d4ff;font-size:14px;font-weight:700;'
   );
 
