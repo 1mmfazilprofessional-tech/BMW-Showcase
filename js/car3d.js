@@ -79,44 +79,53 @@
   );
 
   renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.18;
 
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-  // ─── LIGHTING ────────────────────────────────────────────────
-  const ambientLight = new THREE.HemisphereLight(
-    0xffffff,
-    0x10141d,
-    2.0
-  );
-
+  // ─── CINEMATIC AUTOMOTIVE STUDIO LIGHTING ───────────────────
+  const ambientLight = new THREE.HemisphereLight(0xeaf2ff, 0x030509, 1.15);
   scene.add(ambientLight);
 
-  const keyLight = new THREE.DirectionalLight(
-    0xffffff,
-    4.0
-  );
-
-  keyLight.position.set(5, 7, 6);
+  const keyLight = new THREE.DirectionalLight(0xffffff, 5.2);
+  keyLight.position.set(4.5, 6.5, 5.5);
   keyLight.castShadow = true;
-
   scene.add(keyLight);
 
-  const fillLight = new THREE.DirectionalLight(
-    0x8ab8ff,
-    2.5
+  const softbox = new THREE.DirectionalLight(0xbfd8ff, 3.4);
+  softbox.position.set(-5.5, 4.0, 3.5);
+  scene.add(softbox);
+
+  const roofLight = new THREE.DirectionalLight(0xffffff, 2.8);
+  roofLight.position.set(0, 8, 1);
+  scene.add(roofLight);
+
+  const blueRim = new THREE.PointLight(0x1688ff, 7.0, 10, 2);
+  blueRim.position.set(-3.8, 2.8, -3.5);
+  scene.add(blueRim);
+
+  const redRim = new THREE.PointLight(0xff1838, 6.5, 10, 2);
+  redRim.position.set(3.8, 2.4, -3.2);
+  scene.add(redRim);
+
+  // Thin luminous background bars reproduce the blue/red studio streaks.
+  const blueBar = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.18, 4.8),
+    new THREE.MeshBasicMaterial({ color: 0x1688ff, transparent: true, opacity: 0.52, blending: THREE.AdditiveBlending, depthWrite: false })
   );
+  blueBar.position.set(-2.6, 2.2, -3.8);
+  blueBar.rotation.z = -0.22;
+  scene.add(blueBar);
 
-  fillLight.position.set(-6, 3, 2);
-  scene.add(fillLight);
-
-  const rimLight = new THREE.DirectionalLight(
-    0xffffff,
-    3.0
+  const redBar = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.16, 4.2),
+    new THREE.MeshBasicMaterial({ color: 0xff1838, transparent: true, opacity: 0.46, blending: THREE.AdditiveBlending, depthWrite: false })
   );
-
-  rimLight.position.set(0, 4, -7);
-  scene.add(rimLight);
+  redBar.position.set(2.7, 2.0, -3.7);
+  redBar.rotation.z = 0.25;
+  scene.add(redBar);
 
   // ─── SHOWROOM FLOOR ──────────────────────────────────────────
   const floorGeometry = new THREE.CircleGeometry(5.5, 96);
@@ -236,9 +245,19 @@
 
             materials.forEach(material => {
               if (!material) return;
-              if (material.color) material.color.setHex(0x050608);
-              if ('metalness' in material) material.metalness = Math.max(material.metalness || 0, 0.72);
-              if ('roughness' in material) material.roughness = Math.min(material.roughness ?? 0.35, 0.28);
+              // Preserve the GLB's original paint tone; only refine its PBR response.
+              if (material.color && material.color.getHex() < 0x080808) {
+                material.color.setHex(0x11141a);
+              }
+              if ('metalness' in material) material.metalness = Math.max(material.metalness || 0, 0.68);
+              if ('roughness' in material) material.roughness = Math.min(material.roughness ?? 0.32, 0.22);
+
+              // Realistic black-car reflections: bright edge highlights instead of a flat silhouette.
+              if (material.emissive) {
+                material.emissive.setHex(0x000000);
+                material.emissiveIntensity = 0;
+              }
+
               material.needsUpdate = true;
             });
           }
@@ -264,7 +283,54 @@
         }
       });
 
+      // ─── REALISTIC VEHICLE LIGHTING / DETAIL MATERIALS ───────
+      carModel.traverse(function(object) {
+        if (!object.isMesh || !object.material) return;
+
+        const materials = Array.isArray(object.material)
+          ? object.material
+          : [object.material];
+
+        const name = (object.name || '').toLowerCase();
+
+        materials.forEach(function(material) {
+          if (!material) return;
+
+          if (/head.?light|headlamp|led|lamp/.test(name) && material.emissive) {
+            material.emissive.setHex(0xe8f7ff);
+            material.emissiveIntensity = 3.2;
+            if (material.color) material.color.setHex(0xd9f1ff);
+            if ('roughness' in material) material.roughness = 0.12;
+            material.needsUpdate = true;
+          }
+
+          if (/brake.?caliper|caliper|brake/.test(name) && material.color) {
+            material.color.setHex(0xc10d1d);
+            if ('metalness' in material) material.metalness = 0.72;
+            if ('roughness' in material) material.roughness = 0.2;
+            material.needsUpdate = true;
+          }
+
+          if (/wheel|rim|alloy/.test(name) && 'metalness' in material) {
+            material.metalness = Math.max(material.metalness || 0, 0.82);
+            if ('roughness' in material) material.roughness = Math.min(material.roughness ?? 0.3, 0.24);
+            material.needsUpdate = true;
+          }
+        });
+      });
+
+      // Headlights are real Three.js lights parented to the vehicle, so they rotate with it.
+      [
+        [-0.88, 0.72, 2.28],
+        [ 0.88, 0.72, 2.28]
+      ].forEach(function(position) {
+        const headLight = new THREE.PointLight(0xdff7ff, 4.5, 3.8, 2);
+        headLight.position.set(position[0], position[1], position[2]);
+        carModel.add(headLight);
+      });
+
       // ─── AUTO CENTER / SCALE ───────────────────────────────
+
       const box = new THREE.Box3().setFromObject(carModel);
 
       const size = new THREE.Vector3();
@@ -280,7 +346,7 @@
       const maxDimension =
         Math.max(size.x, size.y, size.z);
 
-      const desiredSize = 4.8;
+      const desiredSize = 5.15;
 
       const scale =
         desiredSize / maxDimension;
