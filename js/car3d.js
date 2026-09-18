@@ -1,57 +1,81 @@
-/* BMW 3D SHOWCASE
-   Real GLB Vehicle Viewer
-   Three.js r128 + GLTFLoader
-*/
+/* ═══════════════════════════════════════════════════════════════
+   BMW M5 SHOWCASE — REAL 3D CAR ENGINE
+   Three.js + GLTFLoader
+   Real BMW GLB model / autonomous showroom presentation
+   ═══════════════════════════════════════════════════════════════ */
 
 'use strict';
 
-(function () {
+(function initRealBMWShowroom() {
+
+  // ─── DOM ─────────────────────────────────────────────────────
+  const stage = document.getElementById('car-stage');
+  const wrapper = document.getElementById('car-model-wrapper');
   const container = document.getElementById('bmw-3d-container');
   const canvas = document.getElementById('bmw-3d-canvas');
-  const loading = document.getElementById('car-3d-loading');
-  const loadingProgress = document.getElementById('car-3d-loading-progress');
 
-  if (!container || !canvas) {
-    console.error('BMW 3D container or canvas not found.');
+  const turntable = document.getElementById('showroom-turntable');
+  const shadowContact = document.querySelector('.car-shadow-contact');
+  const lightOverlay = document.getElementById('car-lighting-overlay');
+
+  const calloutsWrap =
+    document.getElementById('inspection-callouts-container');
+
+  const svgCanvas =
+    document.getElementById('inspection-svg-canvas');
+
+  const svgPath =
+    document.getElementById('svg-connector-path');
+
+  const statusModeText =
+    document.getElementById('status-mode-text');
+
+  const statusStepBadge =
+    document.getElementById('status-step-badge');
+
+  const loading =
+    document.getElementById('car-3d-loading');
+
+  const loadingProgress =
+    document.getElementById('car-3d-loading-progress');
+
+  if (!stage || !wrapper || !container || !canvas) {
+    console.warn('BMW 3D container not found.');
     return;
   }
 
+  // ─── CHECK THREE.JS ──────────────────────────────────────────
   if (typeof THREE === 'undefined') {
-    console.error('Three.js is not loaded.');
+    console.error('Three.js was not loaded.');
     return;
   }
 
   if (typeof THREE.GLTFLoader === 'undefined') {
-    console.error('GLTFLoader is not loaded.');
+    console.error('GLTFLoader was not loaded.');
     return;
   }
 
-  /* -------------------------------------------------------
-     BASIC SETUP
-  ------------------------------------------------------- */
-
+  // ─── THREE.JS SCENE ──────────────────────────────────────────
   const scene = new THREE.Scene();
 
   const camera = new THREE.PerspectiveCamera(
     35,
-    container.clientWidth / container.clientHeight,
+    1,
     0.1,
     1000
   );
 
-  camera.position.set(4.5, 2.4, 6.5);
+  camera.position.set(0, 1.4, 7.5);
 
   const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
+    antialias: true,
     alpha: true,
-    antialias: true
+    powerPreference: 'high-performance'
   });
 
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(
-    container.clientWidth,
-    container.clientHeight,
-    false
+  renderer.setPixelRatio(
+    Math.min(window.devicePixelRatio || 1, 2)
   );
 
   renderer.outputEncoding = THREE.sRGBEncoding;
@@ -59,54 +83,48 @@
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-  /* -------------------------------------------------------
-     LIGHTING
-  ------------------------------------------------------- */
-
-  const hemisphereLight = new THREE.HemisphereLight(
+  // ─── LIGHTING ────────────────────────────────────────────────
+  const ambientLight = new THREE.HemisphereLight(
     0xffffff,
-    0x111111,
-    2.2
+    0x10141d,
+    2.0
   );
 
-  scene.add(hemisphereLight);
+  scene.add(ambientLight);
 
   const keyLight = new THREE.DirectionalLight(
     0xffffff,
-    3.5
+    4.0
   );
 
-  keyLight.position.set(5, 8, 6);
+  keyLight.position.set(5, 7, 6);
   keyLight.castShadow = true;
 
   scene.add(keyLight);
 
   const fillLight = new THREE.DirectionalLight(
-    0x8bbcff,
-    2.0
+    0x8ab8ff,
+    2.5
   );
 
-  fillLight.position.set(-6, 3, 4);
+  fillLight.position.set(-6, 3, 2);
   scene.add(fillLight);
 
   const rimLight = new THREE.DirectionalLight(
     0xffffff,
-    2.5
+    3.0
   );
 
-  rimLight.position.set(0, 5, -7);
+  rimLight.position.set(0, 4, -7);
   scene.add(rimLight);
 
-  /* -------------------------------------------------------
-     FLOOR
-  ------------------------------------------------------- */
-
-  const floorGeometry = new THREE.CircleGeometry(6, 64);
+  // ─── SHOWROOM FLOOR ──────────────────────────────────────────
+  const floorGeometry = new THREE.CircleGeometry(5.5, 96);
 
   const floorMaterial = new THREE.MeshStandardMaterial({
-    color: 0x080808,
-    metalness: 0.85,
-    roughness: 0.35
+    color: 0x080a0f,
+    metalness: 0.75,
+    roughness: 0.28
   });
 
   const floor = new THREE.Mesh(
@@ -115,689 +133,1122 @@
   );
 
   floor.rotation.x = -Math.PI / 2;
-  floor.position.y = -0.65;
+  floor.position.y = -0.03;
   floor.receiveShadow = true;
 
   scene.add(floor);
 
-  /* -------------------------------------------------------
-     TURNTABLE
-  ------------------------------------------------------- */
+  // ─── TURNTABLE ───────────────────────────────────────────────
+  const platformGeometry =
+    new THREE.CylinderGeometry(3.5, 3.5, 0.12, 96);
 
-  const platformGeometry = new THREE.CylinderGeometry(
-    4.1,
-    4.1,
-    0.12,
-    96
-  );
-
-  const platformMaterial = new THREE.MeshStandardMaterial({
-    color: 0x151515,
-    metalness: 0.95,
-    roughness: 0.25
-  });
+  const platformMaterial =
+    new THREE.MeshStandardMaterial({
+      color: 0x11151d,
+      metalness: 0.9,
+      roughness: 0.2
+    });
 
   const platform = new THREE.Mesh(
     platformGeometry,
     platformMaterial
   );
 
-  platform.position.y = -0.55;
+  platform.position.y = 0.02;
   platform.receiveShadow = true;
+  platform.castShadow = true;
 
   scene.add(platform);
 
-  /* -------------------------------------------------------
-     VEHICLE ROOT
-  ------------------------------------------------------- */
-
+  // ─── BMW MODEL ROOT ──────────────────────────────────────────
   const carRoot = new THREE.Group();
 
-  carRoot.position.set(
-    0,
-    -0.2,
-    -7
-  );
+  carRoot.position.set(0, 0.12, 0);
+  carRoot.visible = false;
 
   scene.add(carRoot);
 
-  let bmwModel = null;
+  let carModel = null;
+  let modelMeshes = [];
 
-  /* -------------------------------------------------------
-     VEHICLE PARTS
-  ------------------------------------------------------- */
-
-  const vehicleParts = {
-    body: [],
-    wheels: [],
-    headlights: [],
-    grille: [],
-    mirrors: [],
-    windows: [],
-    interior: [],
-    engine: [],
-    exhaust: [],
-    spoiler: []
-  };
-
-  /* -------------------------------------------------------
-     HIGHLIGHT MATERIAL
-  ------------------------------------------------------- */
-
-  function highlightMeshes(meshes) {
-    meshes.forEach(function (mesh) {
-      if (!mesh || !mesh.material) return;
-
-      const materials = Array.isArray(mesh.material)
-        ? mesh.material
-        : [mesh.material];
-
-      materials.forEach(function (material) {
-        if (!material) return;
-
-        material.emissive = new THREE.Color(0x087cff);
-        material.emissiveIntensity = 1.2;
-      });
-    });
-  }
-
-  function restoreMeshes(meshes) {
-    meshes.forEach(function (mesh) {
-      if (!mesh || !mesh.material) return;
-
-      const materials = Array.isArray(mesh.material)
-        ? mesh.material
-        : [mesh.material];
-
-      materials.forEach(function (material) {
-        if (!material) return;
-
-        if (material.emissive) {
-          material.emissive.set(0x000000);
-        }
-
-        material.emissiveIntensity = 0;
-      });
-    });
-  }
-
-  function clearAllHighlights() {
-    Object.keys(vehicleParts).forEach(function (key) {
-      restoreMeshes(vehicleParts[key]);
-    });
-  }
-
-  /* -------------------------------------------------------
-     FIND VEHICLE PARTS
-  ------------------------------------------------------- */
-
-  function classifyMesh(mesh) {
-    const name = (
-      mesh.name ||
-      ''
-    ).toLowerCase();
-
-    if (
-      name.includes('wheel') ||
-      name.includes('tire') ||
-      name.includes('tyre')
-    ) {
-      vehicleParts.wheels.push(mesh);
-    }
-
-    if (
-      name.includes('headlight') ||
-      name.includes('light')
-    ) {
-      vehicleParts.headlights.push(mesh);
-    }
-
-    if (
-      name.includes('grille') ||
-      name.includes('grill')
-    ) {
-      vehicleParts.grille.push(mesh);
-    }
-
-    if (
-      name.includes('mirror')
-    ) {
-      vehicleParts.mirrors.push(mesh);
-    }
-
-    if (
-      name.includes('window') ||
-      name.includes('windshield') ||
-      name.includes('glass')
-    ) {
-      vehicleParts.windows.push(mesh);
-    }
-
-    if (
-      name.includes('seat') ||
-      name.includes('dashboard') ||
-      name.includes('interior') ||
-      name.includes('cockpit')
-    ) {
-      vehicleParts.interior.push(mesh);
-    }
-
-    if (
-      name.includes('engine') ||
-      name.includes('motor')
-    ) {
-      vehicleParts.engine.push(mesh);
-    }
-
-    if (
-      name.includes('exhaust') ||
-      name.includes('muffler')
-    ) {
-      vehicleParts.exhaust.push(mesh);
-    }
-
-    if (
-      name.includes('spoiler')
-    ) {
-      vehicleParts.spoiler.push(mesh);
-    }
-
-    if (
-      name.includes('body') ||
-      name.includes('hood') ||
-      name.includes('trunk') ||
-      name.includes('bumper') ||
-      name.includes('door')
-    ) {
-      vehicleParts.body.push(mesh);
-    }
-  }
-
-  /* -------------------------------------------------------
-     LOADING
-  ------------------------------------------------------- */
-
+  // ─── MODEL LOADER ────────────────────────────────────────────
   const loader = new THREE.GLTFLoader();
 
+  const MODEL_URL =
+    'assets/models/bmw_m4_competition_m_package.glb';
+
   loader.load(
-    'assets/models/bmw_m4_competition_m_package.glb',
+    MODEL_URL,
 
-    function (gltf) {
-      bmwModel = gltf.scene;
+    function onLoad(gltf) {
 
-      bmwModel.traverse(function (object) {
-        if (!object.isMesh) return;
+      carModel = gltf.scene;
 
-        object.castShadow = true;
-        object.receiveShadow = true;
+      carRoot.add(carModel);
 
-        classifyMesh(object);
+      // Collect all meshes.
+      carModel.traverse(function(object) {
+
+        if (object.isMesh) {
+
+          modelMeshes.push(object);
+
+          object.castShadow = true;
+          object.receiveShadow = true;
+
+          if (object.material) {
+
+            if (Array.isArray(object.material)) {
+
+              object.material.forEach(material => {
+                if (material) {
+                  material.needsUpdate = true;
+                }
+              });
+
+            } else {
+
+              object.material.needsUpdate = true;
+            }
+          }
+        }
       });
 
-      /* -----------------------------------------------
-         CENTER AND SCALE MODEL
-      ----------------------------------------------- */
-
-      const box = new THREE.Box3().setFromObject(
-        bmwModel
-      );
+      // ─── AUTO CENTER / SCALE ───────────────────────────────
+      const box = new THREE.Box3().setFromObject(carModel);
 
       const size = new THREE.Vector3();
-
-      box.getSize(size);
-
       const center = new THREE.Vector3();
 
+      box.getSize(size);
       box.getCenter(center);
 
-      bmwModel.position.sub(center);
+      carModel.position.x -= center.x;
+      carModel.position.y -= box.min.y;
+      carModel.position.z -= center.z;
 
-      const maxDimension = Math.max(
-        size.x,
-        size.y,
-        size.z
-      );
+      const maxDimension =
+        Math.max(size.x, size.y, size.z);
 
-      const targetSize = 5.2;
+      const desiredSize = 4.8;
 
       const scale =
-        targetSize / maxDimension;
+        desiredSize / maxDimension;
 
-      bmwModel.scale.setScalar(scale);
+      carModel.scale.setScalar(scale);
 
-      /* -----------------------------------------------
-         ADD MODEL
-      ----------------------------------------------- */
+      // Recalculate after scaling.
+      const scaledBox =
+        new THREE.Box3().setFromObject(carModel);
 
-      carRoot.add(bmwModel);
+      const scaledCenter =
+        new THREE.Vector3();
 
-      carRoot.rotation.y = Math.PI;
+      scaledBox.getCenter(scaledCenter);
+
+      carModel.position.y -= scaledBox.min.y;
+
+      carRoot.visible = true;
 
       if (loading) {
-        loading.style.opacity = '0';
-
-        setTimeout(function () {
-          loading.style.display = 'none';
-        }, 500);
+        loading.classList.add('hidden');
       }
 
       if (loadingProgress) {
         loadingProgress.style.width = '100%';
       }
 
-      console.log(
-        'BMW GLB loaded successfully.'
+      setupVehicleParts();
+      updateStatus(
+        '360° SHOWROOM PRESENTATION',
+        'STAGE 1 / 3'
       );
 
-      console.log(
-        'Vehicle parts:',
-        vehicleParts
-      );
-
-      startShowroomPresentation();
+      startPresentation();
     },
 
-    function (xhr) {
-      if (
-        xhr &&
-        xhr.total &&
-        loadingProgress
-      ) {
+    function onProgress(xhr) {
+
+      if (xhr.lengthComputable) {
+
         const percent =
           (xhr.loaded / xhr.total) * 100;
 
-        loadingProgress.style.width =
-          Math.min(percent, 100) + '%';
+        if (loadingProgress) {
+          loadingProgress.style.width =
+            `${percent}%`;
+        }
       }
     },
 
-    function (error) {
+    function onError(error) {
+
       console.error(
-        'BMW GLB loading failed:',
+        'BMW GLB failed to load:',
         error
       );
 
       if (loading) {
-        const label =
-          loading.querySelector(
-            '.car-3d-loading-label'
-          );
-
-        if (label) {
-          label.textContent =
-            'VEHICLE LOAD ERROR';
-        }
+        loading.classList.add('hidden');
       }
+
+      updateStatus(
+        '3D MODEL LOAD ERROR',
+        'CHECK MODEL PATH'
+      );
     }
   );
 
-  /* -------------------------------------------------------
-     CAMERA
-  ------------------------------------------------------- */
-
-  const cameraHome = {
-    position: new THREE.Vector3(
-      4.5,
-      2.4,
-      6.5
-    ),
-
-    target: new THREE.Vector3(
-      0,
-      0,
-      0
-    )
-  };
-
-  const cameraTarget = new THREE.Vector3(
-    0,
-    0,
-    0
-  );
-
-  function updateCamera() {
-    camera.lookAt(cameraTarget);
-  }
-
-  /* -------------------------------------------------------
-     ENTRANCE ANIMATION
-  ------------------------------------------------------- */
-
-  let presentationStarted = false;
-
-  function startShowroomPresentation() {
-    if (presentationStarted) return;
-
-    presentationStarted = true;
-
-    const startPosition =
-      new THREE.Vector3(
-        0,
-        -0.2,
-        -7
-      );
-
-    const finalPosition =
-      new THREE.Vector3(
-        0,
-        -0.2,
-        0
-      );
-
-    carRoot.position.copy(
-      startPosition
-    );
-
-    const startTime =
-      performance.now();
-
-    const duration = 4500;
-
-    function entranceAnimation(now) {
-      const elapsed =
-        now - startTime;
-
-      let progress =
-        Math.min(
-          elapsed / duration,
-          1
-        );
-
-      /* Smooth ease-out */
-
-      const eased =
-        1 -
-        Math.pow(
-          1 - progress,
-          3
-        );
-
-      carRoot.position.lerpVectors(
-        startPosition,
-        finalPosition,
-        eased
-      );
-
-      if (progress < 1) {
-        requestAnimationFrame(
-          entranceAnimation
-        );
-      } else {
-        carRoot.position.copy(
-          finalPosition
-        );
-
-        beginPause();
-      }
-    }
-
-    requestAnimationFrame(
-      entranceAnimation
-    );
-  }
-
-  /* -------------------------------------------------------
-     PAUSE AFTER ARRIVAL
-  ------------------------------------------------------- */
-
-  function beginPause() {
-    setTimeout(
-      function () {
-        beginRotation();
-      },
-      6000
-    );
-  }
-
-  /* -------------------------------------------------------
-     REAL 360 DEGREE ROTATION
-  ------------------------------------------------------- */
-
-  function beginRotation() {
-    const startRotation =
-      carRoot.rotation.y;
-
-    const startTime =
-      performance.now();
-
-    const duration =
-      7000;
-
-    function rotateAnimation(now) {
-      const elapsed =
-        now - startTime;
-
-      let progress =
-        Math.min(
-          elapsed / duration,
-          1
-        );
-
-      carRoot.rotation.y =
-        startRotation +
-        progress *
-          Math.PI *
-          2;
-
-      if (progress < 1) {
-        requestAnimationFrame(
-          rotateAnimation
-        );
-      } else {
-        carRoot.rotation.y =
-          startRotation +
-          Math.PI * 2;
-
-        startInspectionSequence();
-      }
-    }
-
-    requestAnimationFrame(
-      rotateAnimation
-    );
-  }
-
-  /* -------------------------------------------------------
-     INSPECTION SEQUENCE
-  ------------------------------------------------------- */
-
-  const inspectionSteps = [
+  // ─── VEHICLE PART DEFINITIONS ────────────────────────────────
+  const vehicleParts = [
     {
-      name: 'HEADLIGHTS',
-      meshes: function () {
-        return vehicleParts.headlights;
-      },
-      camera: [3.2, 1.4, 4.8]
+      id: 'engine',
+      objectNames: [
+        'Engine',
+        'engine',
+        'Engine_001'
+      ],
+      system: 'engine',
+      tag: 'POWERTRAIN',
+      title: '4.4L M TwinPower Turbo V8',
+      desc:
+        'Real engine geometry from the BMW model.',
+      camera: [2.7, 1.3, 4.0]
     },
 
     {
-      name: 'WHEELS',
-      meshes: function () {
-        return vehicleParts.wheels;
-      },
-      camera: [4.5, 0.8, 3.8]
+      id: 'headlights',
+      objectNames: [
+        'Front Left Headlight',
+        'Front Right Headlight'
+      ],
+      system: 'aerodynamics',
+      tag: 'ILLUMINATION',
+      title: 'BMW Adaptive Headlight System',
+      desc:
+        'Actual headlight meshes highlighted directly on the 3D vehicle.',
+      camera: [2.8, 1.3, 4.4]
     },
 
     {
-      name: 'ENGINE',
-      meshes: function () {
-        return vehicleParts.engine;
-      },
-      camera: [0, 2.2, 3.0]
+      id: 'grille',
+      objectNames: [
+        'Front Grille'
+      ],
+      system: 'aerodynamics',
+      tag: 'AERODYNAMICS',
+      title: 'BMW Kidney Grille',
+      desc:
+        'Actual front grille geometry from the loaded BMW model.',
+      camera: [2.5, 1.15, 4.8]
     },
 
     {
-      name: 'GRILLE',
-      meshes: function () {
-        return vehicleParts.grille;
-      },
-      camera: [0, 1.0, 4.8]
+      id: 'wheels',
+      objectNames: [
+        'Front Left Wheel',
+        'Front Right Wheel',
+        'Rear Left Wheel',
+        'Rear Right Wheel'
+      ],
+      system: 'braking',
+      tag: 'WHEELS',
+      title: 'M Performance Wheels',
+      desc:
+        'Actual wheel geometry highlighted on the vehicle.',
+      camera: [3.4, 0.75, 2.8]
     },
 
     {
-      name: 'EXHAUST',
-      meshes: function () {
-        return vehicleParts.exhaust;
-      },
-      camera: [-3.5, 0.8, -3.8]
+      id: 'mirrors',
+      objectNames: [
+        'Front Left Mirror',
+        'Front Right Mirror'
+      ],
+      system: 'aerodynamics',
+      tag: 'AERODYNAMICS',
+      title: 'M Aerodynamic Mirrors',
+      desc:
+        'Actual mirror geometry highlighted on the vehicle.',
+      camera: [3.2, 1.65, 3.4]
     },
 
     {
-      name: 'SPOILER',
-      meshes: function () {
-        return vehicleParts.spoiler;
-      },
-      camera: [-2.8, 1.5, -3.8]
+      id: 'cockpit',
+      objectNames: [
+        'Dashboard',
+        'Seats'
+      ],
+      system: 'cockpit',
+      tag: 'DIGITAL INTERFACE',
+      title: 'M Cockpit',
+      desc:
+        'Interior geometry available in the loaded 3D model.',
+      camera: [2.8, 1.8, 2.5]
+    },
+
+    {
+      id: 'spoiler',
+      objectNames: [
+        'Spoiler'
+      ],
+      system: 'aerodynamics',
+      tag: 'AERODYNAMICS',
+      title: 'Rear Spoiler',
+      desc:
+        'Actual spoiler geometry highlighted on the BMW.',
+      camera: [-3.0, 1.4, -3.5]
+    },
+
+    {
+      id: 'exhaust',
+      objectNames: [
+        'Exhaust'
+      ],
+      system: 'aerodynamics',
+      tag: 'EXHAUST',
+      title: 'M Performance Exhaust',
+      desc:
+        'Actual exhaust geometry highlighted on the vehicle.',
+      camera: [-3.2, 0.8, -3.7]
     }
   ];
 
-  let inspectionIndex = 0;
+  // ─── FIND MODEL OBJECT ───────────────────────────────────────
+  function findObjectsByNames(names) {
 
-  function startInspectionSequence() {
-    inspectionIndex = 0;
+    if (!carModel) return [];
 
-    inspectNextPart();
+    const results = [];
+
+    carModel.traverse(object => {
+
+      if (!object.name) return;
+
+      const objectName =
+        object.name.toLowerCase();
+
+      names.forEach(name => {
+
+        if (
+          objectName === name.toLowerCase() ||
+          objectName.includes(name.toLowerCase())
+        ) {
+          if (!results.includes(object)) {
+            results.push(object);
+          }
+        }
+      });
+    });
+
+    return results;
   }
 
-  function inspectNextPart() {
-    clearAllHighlights();
+  // ─── HIGHLIGHT SYSTEM ───────────────────────────────────────
+  let highlightedObjects = [];
 
-    if (
-      inspectionIndex >=
-      inspectionSteps.length
-    ) {
-      finishPresentation();
-      return;
+  function clearHighlight() {
+
+    highlightedObjects.forEach(item => {
+
+      if (item.material) {
+
+        if (Array.isArray(item.material)) {
+
+          item.material.forEach(mat => {
+
+            if (mat && mat.emissive) {
+              mat.emissive.setHex(
+                item.originalEmissive || 0x000000
+              );
+              mat.emissiveIntensity =
+                item.originalIntensity || 0;
+            }
+          });
+
+        } else if (item.material.emissive) {
+
+          item.material.emissive.setHex(
+            item.originalEmissive || 0x000000
+          );
+
+          item.material.emissiveIntensity =
+            item.originalIntensity || 0;
+        }
+      }
+    });
+
+    highlightedObjects = [];
+  }
+
+  function highlightPart(part) {
+
+    clearHighlight();
+
+    const objects =
+      findObjectsByNames(part.objectNames);
+
+    objects.forEach(object => {
+
+      if (!object.material) return;
+
+      if (Array.isArray(object.material)) {
+
+        object.material.forEach(material => {
+
+          if (!material || !material.emissive)
+            return;
+
+          const original =
+            material.emissive.getHex();
+
+          const originalIntensity =
+            material.emissiveIntensity || 0;
+
+          highlightedObjects.push({
+            material,
+            originalEmissive: original,
+            originalIntensity
+          });
+
+          material.emissive.setHex(0x1677ff);
+          material.emissiveIntensity = 1.4;
+        });
+
+      } else if (object.material.emissive) {
+
+        const material = object.material;
+
+        highlightedObjects.push({
+          material,
+          originalEmissive:
+            material.emissive.getHex(),
+          originalIntensity:
+            material.emissiveIntensity || 0
+        });
+
+        material.emissive.setHex(0x1677ff);
+        material.emissiveIntensity = 1.4;
+      }
+    });
+  }
+
+  // ─── CALLOUT CREATION ────────────────────────────────────────
+  let calloutElements = [];
+
+  function setupVehicleParts() {
+
+    if (!calloutsWrap) return;
+
+    calloutsWrap.innerHTML = '';
+
+    calloutElements =
+      vehicleParts.map(part => {
+
+        const anchor =
+          document.createElement('div');
+
+        anchor.className =
+          'callout-anchor';
+
+        anchor.id =
+          `anchor-${part.id}`;
+
+        anchor.innerHTML = `
+          <div class="callout-ring"></div>
+          <div class="callout-dot"></div>
+        `;
+
+        anchor.style.opacity = '0';
+        anchor.style.pointerEvents = 'none';
+
+        const card =
+          document.createElement('div');
+
+        card.className =
+          'callout-card';
+
+        card.id =
+          `card-${part.id}`;
+
+        card.innerHTML = `
+          <div class="callout-card-tag">
+            ${part.tag}
+          </div>
+
+          <div class="callout-card-title">
+            ${part.title}
+          </div>
+
+          <div class="callout-card-desc">
+            ${part.desc}
+          </div>
+
+          <div class="callout-card-action">
+            <span>View Engineering Specs</span>
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+        `;
+
+        card.style.opacity = '0';
+        card.style.pointerEvents = 'none';
+
+        card.addEventListener(
+          'mouseenter',
+          () => {
+            isPausedByUser = true;
+          }
+        );
+
+        card.addEventListener(
+          'mouseleave',
+          () => {
+            isPausedByUser = false;
+          }
+        );
+
+        anchor.addEventListener(
+          'mouseenter',
+          () => {
+            isPausedByUser = true;
+          }
+        );
+
+        anchor.addEventListener(
+          'mouseleave',
+          () => {
+            isPausedByUser = false;
+          }
+        );
+
+        card.addEventListener(
+          'click',
+          () => {
+
+            if (
+              typeof window.openEngineeringModal ===
+              'function'
+            ) {
+              window.openEngineeringModal(
+                part.system
+              );
+            }
+          }
+        );
+
+        calloutsWrap.appendChild(anchor);
+        calloutsWrap.appendChild(card);
+
+        return {
+          part,
+          anchor,
+          card
+        };
+      });
+  }
+
+  // ─── STATUS ──────────────────────────────────────────────────
+  function updateStatus(mode, step) {
+
+    if (statusModeText) {
+      statusModeText.textContent = mode;
     }
 
-    const step =
-      inspectionSteps[
-        inspectionIndex
-      ];
-
-    const meshes =
-      step.meshes();
-
-    if (meshes.length > 0) {
-      highlightMeshes(meshes);
+    if (statusStepBadge) {
+      statusStepBadge.textContent = step;
     }
+  }
 
-    animateCameraTo(
-      step.camera,
-      1200
-    );
+  // ─── PRESENTATION STATE ─────────────────────────────────────
+  const STATES = {
+    ENTRANCE: 0,
+    ROTATION: 1,
+    PAUSE: 2,
+    INSPECTION: 3,
+    RESET: 4
+  };
 
-    inspectionIndex++;
+  let currentState = STATES.ENTRANCE;
+  let stateStart = 0;
 
-    setTimeout(
-      inspectNextPart,
-      2800
+  let isPausedByUser = false;
+
+  let currentPartIndex = 0;
+  let partStart = 0;
+
+  let activeCard = null;
+  let activeAnchor = null;
+
+  let startCameraPosition =
+    new THREE.Vector3();
+
+  let startCameraLook =
+    new THREE.Vector3();
+
+  let currentCameraTarget =
+    new THREE.Vector3(0, 1, 0);
+
+  const ENTRANCE_DURATION = 1800;
+  const ROTATION_DURATION = 8500;
+  const PAUSE_DURATION = 6000;
+  const PART_DURATION = 3600;
+
+  // ─── CAMERA LOOK ─────────────────────────────────────────────
+  function lookAtCar() {
+
+    camera.lookAt(
+      currentCameraTarget
     );
   }
 
-  /* -------------------------------------------------------
-     CAMERA ANIMATION
-  ------------------------------------------------------- */
+  // ─── SHOWCASE ENTRANCE ──────────────────────────────────────
+  function entrance(progress) {
 
-  function animateCameraTo(
-    positionArray,
-    duration
-  ) {
-    const start =
-      camera.position.clone();
+    const ease =
+      1 - Math.pow(1 - progress, 3);
+
+    carRoot.position.y =
+      THREE.MathUtils.lerp(
+        -2.2,
+        0.12,
+        ease
+      );
+
+    carRoot.position.z =
+      THREE.MathUtils.lerp(
+        -1.8,
+        0,
+        ease
+      );
+
+    carRoot.scale.setScalar(
+      THREE.MathUtils.lerp(
+        0.82,
+        1,
+        ease
+      )
+    );
+
+    camera.position.set(
+      0,
+      THREE.MathUtils.lerp(
+        2.4,
+        1.45,
+        ease
+      ),
+      THREE.MathUtils.lerp(
+        9,
+        7.5,
+        ease
+      )
+    );
+
+    currentCameraTarget.set(
+      0,
+      0.9,
+      0
+    );
+
+    lookAtCar();
+
+    if (shadowContact) {
+      shadowContact.style.opacity =
+        String(ease);
+    }
+
+    if (turntable) {
+      turntable.style.opacity =
+        String(ease);
+    }
+  }
+
+  // ─── 360° REAL MODEL ROTATION ────────────────────────────────
+  function rotateCar(progress) {
+
+    const eased =
+      progress * progress *
+      (3 - 2 * progress);
+
+    carRoot.rotation.y =
+      eased * Math.PI * 2;
+
+    carRoot.position.y =
+      0.12 +
+      Math.sin(progress * Math.PI) *
+      0.025;
+
+    camera.position.set(
+      0,
+      1.45,
+      7.5
+    );
+
+    currentCameraTarget.set(
+      0,
+      0.9,
+      0
+    );
+
+    lookAtCar();
+
+    if (lightOverlay) {
+
+      lightOverlay.style.opacity =
+        String(
+          0.08 +
+          Math.abs(
+            Math.sin(progress * Math.PI * 2)
+          ) * 0.22
+        );
+    }
+
+    updateStatus(
+      'AUTONOMOUS 360° SHOWROOM',
+      `${Math.round(progress * 360)}° ROTATION`
+    );
+  }
+
+  // ─── INSPECTION CAMERA ───────────────────────────────────────
+  function inspectPart(part, progress) {
 
     const target =
       new THREE.Vector3(
-        positionArray[0],
-        positionArray[1],
-        positionArray[2]
+        part.camera[0],
+        part.camera[1],
+        part.camera[2]
       );
 
-    const startTime =
-      performance.now();
+    const ease =
+      progress < 0.5
+        ? 2 * progress * progress
+        : 1 - Math.pow(
+            -2 * progress + 2,
+            2
+          ) / 2;
 
-    function moveCamera(now) {
-      const elapsed =
-        now - startTime;
+    camera.position.lerpVectors(
+      startCameraPosition,
+      target,
+      ease
+    );
+
+    currentCameraTarget.lerpVectors(
+      startCameraLook,
+      new THREE.Vector3(0, 0.85, 0),
+      ease
+    );
+
+    lookAtCar();
+  }
+
+  // ─── CALLOUT VISIBILITY ──────────────────────────────────────
+  function hideCallouts() {
+
+    if (activeCard) {
+
+      activeCard.classList.remove('active');
+      activeCard.style.opacity = '0';
+      activeCard.style.pointerEvents =
+        'none';
+
+      activeCard = null;
+    }
+
+    if (activeAnchor) {
+
+      activeAnchor.style.opacity = '0';
+      activeAnchor.style.pointerEvents =
+        'none';
+
+      activeAnchor = null;
+    }
+
+    if (svgPath) {
+      svgPath.setAttribute('d', '');
+    }
+  }
+
+  function showCallout(index) {
+
+    const entry =
+      calloutElements[index];
+
+    if (!entry) return;
+
+    const {
+      part,
+      anchor,
+      card
+    } = entry;
+
+    hideCallouts();
+
+    anchor.style.left = '50%';
+    anchor.style.top = '50%';
+
+    card.style.left =
+      window.innerWidth <= 640
+        ? '50%'
+        : '68%';
+
+    card.style.top =
+      window.innerWidth <= 640
+        ? 'auto'
+        : '22%';
+
+    card.style.bottom =
+      window.innerWidth <= 640
+        ? '-10px'
+        : 'auto';
+
+    card.classList.add('active');
+
+    card.style.opacity = '1';
+    card.style.pointerEvents = 'auto';
+
+    anchor.style.opacity = '1';
+    anchor.style.pointerEvents = 'auto';
+
+    activeCard = card;
+    activeAnchor = anchor;
+
+    highlightPart(part);
+
+    updateStatus(
+      `INSPECTION: ${part.tag}`,
+      `PART ${index + 1} OF ${vehicleParts.length}`
+    );
+  }
+
+  // ─── PRESENTATION ENGINE ────────────────────────────────────
+  let lastTime = 0;
+
+  function presentationLoop(timestamp) {
+
+    if (!lastTime) {
+      lastTime = timestamp;
+      stateStart = timestamp;
+    }
+
+    if (!carModel) {
+      renderer.render(
+        scene,
+        camera
+      );
+
+      requestAnimationFrame(
+        presentationLoop
+      );
+
+      return;
+    }
+
+    const elapsed =
+      timestamp - stateStart;
+
+    // ── ENTRANCE ─────────────────────────────────────────────
+    if (currentState === STATES.ENTRANCE) {
 
       const progress =
         Math.min(
-          elapsed / duration,
+          elapsed / ENTRANCE_DURATION,
           1
         );
 
-      const eased =
-        1 -
-        Math.pow(
+      entrance(progress);
+
+      if (progress >= 1) {
+
+        currentState = STATES.ROTATION;
+        stateStart = timestamp;
+
+        carRoot.rotation.y = 0;
+      }
+    }
+
+    // ── REAL 360 ROTATION ───────────────────────────────────
+    else if (
+      currentState === STATES.ROTATION
+    ) {
+
+      const progress =
+        Math.min(
+          elapsed / ROTATION_DURATION,
+          1
+        );
+
+      rotateCar(progress);
+
+      if (progress >= 1) {
+
+        currentState = STATES.PAUSE;
+        stateStart = timestamp;
+
+        carRoot.rotation.y = 0;
+
+        if (lightOverlay) {
+          lightOverlay.style.opacity = '0';
+        }
+      }
+    }
+
+    // ── BEAUTY SHOT PAUSE ────────────────────────────────────
+    else if (
+      currentState === STATES.PAUSE
+    ) {
+
+      const progress =
+        Math.min(
+          elapsed / PAUSE_DURATION,
+          1
+        );
+
+      const breathe =
+        Math.sin(progress * Math.PI) *
+        0.025;
+
+      carRoot.position.y =
+        0.12 + breathe;
+
+      camera.position.set(
+        0,
+        1.45,
+        7.5
+      );
+
+      currentCameraTarget.set(
+        0,
+        0.9,
+        0
+      );
+
+      lookAtCar();
+
+      updateStatus(
+        'INTELLIGENT VEHICLE INSPECTION',
+        `SYSTEM ACTIVE: ${
+          Math.max(
+            0,
+            Math.ceil(
+              (PAUSE_DURATION - elapsed) /
+              1000
+            )
+          )
+        }S`
+      );
+
+      if (progress >= 1) {
+
+        currentState = STATES.INSPECTION;
+        stateStart = timestamp;
+
+        currentPartIndex = 0;
+        partStart = timestamp;
+
+        startCameraPosition.copy(
+          camera.position
+        );
+
+        startCameraLook.copy(
+          currentCameraTarget
+        );
+
+        showCallout(0);
+      }
+    }
+
+    // ── REAL MODEL COMPONENT INSPECTION ──────────────────────
+    else if (
+      currentState === STATES.INSPECTION
+    ) {
+
+      const part =
+        vehicleParts[currentPartIndex];
+
+      const partElapsed =
+        timestamp - partStart;
+
+      if (part) {
+
+        const transition =
+          Math.min(
+            partElapsed / 900,
+            1
+          );
+
+        inspectPart(
+          part,
+          transition
+        );
+
+        if (
+          !isPausedByUser &&
+          partElapsed >= PART_DURATION
+        ) {
+
+          currentPartIndex++;
+
+          if (
+            currentPartIndex >=
+            vehicleParts.length
+          ) {
+
+            currentState =
+              STATES.RESET;
+
+            stateStart = timestamp;
+
+          } else {
+
+            partStart = timestamp;
+
+            startCameraPosition.copy(
+              camera.position
+            );
+
+            startCameraLook.copy(
+              currentCameraTarget
+            );
+
+            showCallout(
+              currentPartIndex
+            );
+          }
+        }
+      }
+    }
+
+    // ── RESET ────────────────────────────────────────────────
+    else if (
+      currentState === STATES.RESET
+    ) {
+
+      hideCallouts();
+      clearHighlight();
+
+      updateStatus(
+        'INSPECTION CYCLE COMPLETE',
+        'STANDBY'
+      );
+
+      const progress =
+        Math.min(
+          elapsed / 2200,
+          1
+        );
+
+      const ease =
+        1 - Math.pow(
           1 - progress,
           3
         );
 
-      camera.position.lerpVectors(
-        start,
-        target,
-        eased
+      camera.position.lerp(
+        new THREE.Vector3(
+          0,
+          1.45,
+          7.5
+        ),
+        ease
       );
 
-      updateCamera();
+      currentCameraTarget.lerp(
+        new THREE.Vector3(
+          0,
+          0.9,
+          0
+        ),
+        ease
+      );
 
-      if (progress < 1) {
-        requestAnimationFrame(
-          moveCamera
-        );
+      lookAtCar();
+
+      if (progress >= 1) {
+
+        currentState =
+          STATES.ROTATION;
+
+        stateStart = timestamp;
+
+        carRoot.rotation.y = 0;
       }
     }
 
+    renderer.render(
+      scene,
+      camera
+    );
+
     requestAnimationFrame(
-      moveCamera
+      presentationLoop
     );
   }
 
-  /* -------------------------------------------------------
-     PRESENTATION FINISHED
-  ------------------------------------------------------- */
+  // ─── START PRESENTATION ─────────────────────────────────────
+  function startPresentation() {
 
-  function finishPresentation() {
-    clearAllHighlights();
+    currentState =
+      STATES.ENTRANCE;
 
-    animateCameraTo(
-      [
-        cameraHome.position.x,
-        cameraHome.position.y,
-        cameraHome.position.z
-      ],
-      1800
+    stateStart =
+      performance.now();
+
+    requestAnimationFrame(
+      presentationLoop
     );
-
-    setTimeout(function () {
-      enableManualControl();
-    }, 1900);
   }
 
-  /* -------------------------------------------------------
-     MOUSE / POINTER CONTROL
-  ------------------------------------------------------- */
+  // ─── RESIZE ─────────────────────────────────────────────────
+  function resizeRenderer() {
 
-  let manualControlEnabled = false;
+    const rect =
+      container.getBoundingClientRect();
 
+    const width =
+      Math.max(rect.width, 1);
+
+    const height =
+      Math.max(rect.height, 1);
+
+    renderer.setSize(
+      width,
+      height,
+      false
+    );
+
+    camera.aspect =
+      width / height;
+
+    camera.updateProjectionMatrix();
+  }
+
+  window.addEventListener(
+    'resize',
+    resizeRenderer
+  );
+
+  resizeRenderer();
+
+  // ─── MOUSE INTERACTION ──────────────────────────────────────
   let pointerDown = false;
-  let previousPointerX = 0;
-
-  function enableManualControl() {
-    manualControlEnabled = true;
-  }
+  let pointerX = 0;
 
   canvas.addEventListener(
     'pointerdown',
-    function (event) {
-      if (!manualControlEnabled) return;
+    event => {
 
       pointerDown = true;
+      pointerX = event.clientX;
 
-      previousPointerX =
-        event.clientX;
-
-      canvas.setPointerCapture(
+      canvas.setPointerCapture?.(
         event.pointerId
       );
     }
@@ -805,99 +1256,59 @@
 
   canvas.addEventListener(
     'pointermove',
-    function (event) {
-      if (
-        !manualControlEnabled ||
-        !pointerDown ||
-        !bmwModel
-      ) {
+    event => {
+
+      if (!pointerDown || !carModel)
         return;
-      }
 
-      const difference =
-        event.clientX -
-        previousPointerX;
+      const delta =
+        event.clientX - pointerX;
 
-      previousPointerX =
-        event.clientX;
+      pointerX = event.clientX;
 
       carRoot.rotation.y +=
-        difference * 0.008;
+        delta * 0.008;
     }
   );
 
   canvas.addEventListener(
     'pointerup',
-    function (event) {
+    () => {
       pointerDown = false;
-
-      try {
-        canvas.releasePointerCapture(
-          event.pointerId
-        );
-      } catch (e) {}
     }
   );
 
   canvas.addEventListener(
-    'pointerleave',
-    function () {
+    'pointercancel',
+    () => {
       pointerDown = false;
     }
   );
 
-  /* -------------------------------------------------------
-     RESIZE
-  ------------------------------------------------------- */
+  // ─── REDUCED MOTION ──────────────────────────────────────────
+  if (
+    window.matchMedia &&
+    window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
+  ) {
 
-  function resize() {
-    const width =
-      container.clientWidth;
-
-    const height =
-      container.clientHeight;
-
-    if (!width || !height) return;
-
-    camera.aspect =
-      width / height;
-
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(
-      width,
-      height,
-      false
+    // Keep the actual model visible,
+    // but reduce automatic motion.
+    console.log(
+      'Reduced motion preference detected.'
     );
   }
 
-  window.addEventListener(
-    'resize',
-    resize
+  // ─── INITIAL STATUS ─────────────────────────────────────────
+  updateStatus(
+    'LOADING REAL BMW 3D MODEL',
+    'INITIALIZING'
   );
-
-  resize();
-
-  /* -------------------------------------------------------
-     RENDER LOOP
-  ------------------------------------------------------- */
-
-  function animate() {
-    requestAnimationFrame(
-      animate
-    );
-
-    updateCamera();
-
-    renderer.render(
-      scene,
-      camera
-    );
-  }
-
-  animate();
 
   console.log(
-    'BMW Real 3D Showcase initialized.'
+    '%cBMW REAL 3D SHOWROOM ENGINE',
+    'color:#00d4ff;font-size:14px;font-weight:700;'
   );
+
 })();
