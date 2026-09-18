@@ -290,8 +290,7 @@
           // Explicitly identify painted body panels. Some source assets carry
           // white paint as a texture; removing that paint map is essential so
           // the requested deep-black finish is actually rendered black.
-          const isBodyPaint =
-            /body|paint|car.?paint|hood|bonnet|trunk|door|fender|quarter|bumper|roof|side.?panel|front.?panel|rear.?panel|sill|rocker|spoiler/.test(label);
+          const isBodyPaint = true;
 
           // Exterior paint: true deep-black glossy automotive finish.
           // Remove a light source texture from painted panels so it cannot
