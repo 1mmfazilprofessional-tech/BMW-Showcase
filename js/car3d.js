@@ -195,7 +195,7 @@
   const carRoot = new THREE.Group();
 
   carRoot.position.set(0, 0.12, 0);
-  carRoot.visible = false;
+  carRoot.visible = true;
 
   scene.add(carRoot);
 
@@ -301,6 +301,7 @@
       carModel.position.z -= scaledCenter.z;
 
       carRoot.visible = true;
+      carRoot.position.set(0, 0.18, 0);
 
       if (loading) {
         loading.classList.add('hidden');
