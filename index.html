@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BMW M5 — The Ultimate Driving Machine</title>
+  <meta name="description" content="Experience the BMW M5 — a masterpiece of performance engineering, luxury craftsmanship, and cutting-edge technology. Configure yours today." />
+  <meta property="og:title" content="BMW M5 — The Ultimate Driving Machine" />
+  <meta property="og:description" content="Pure performance. Unmatched luxury. The new BMW M5." />
+  <meta property="og:type" content="website" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════ LOADER ═══ -->
+  <div id="loader" class="loader">
+    <div class="loader-inner">
+      <div class="loader-logo">
+        <svg viewBox="0 0 100 100" class="bmw-logo-svg">
+          <circle cx="50" cy="50" r="48" fill="none" stroke="#1c6ef3" stroke-width="2"/>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#1c6ef3" stroke-width="1" opacity="0.4"/>
+          <path d="M50 2 L50 98" stroke="#1c6ef3" stroke-width="1" opacity="0.3"/>
+          <path d="M2 50 L98 50" stroke="#1c6ef3" stroke-width="1" opacity="0.3"/>
+          <circle cx="50" cy="50" r="6" fill="#1c6ef3"/>
+        </svg>
+        <span class="loader-text">BMW</span>
+      </div>
+      <div class="loader-bar"><div class="loader-progress"></div></div>
+      <p class="loader-tagline">Sheer Driving Pleasure</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ CURSOR ═══ -->
+  <div id="cursor" class="cursor"></div>
+  <div id="cursor-follower" class="cursor-follower"></div>
+
+  <!-- ═══════════════════════════════════════ NAV ═══════ -->
+  <nav id="navbar" class="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="nav-logo" id="nav-logo-link">
+        <svg viewBox="0 0 120 40" class="nav-logo-svg" aria-label="BMW Logo">
+          <text x="0" y="32" font-family="Outfit" font-weight="800" font-size="28" fill="url(#logoGrad)" letter-spacing="4">BMW</text>
+          <defs>
+            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="50%" stop-color="#1c6ef3"/>
+              <stop offset="100%" stop-color="#ffffff"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="nav-model-tag">M5</span>
+      </a>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#specs" class="nav-link" data-section="specs">Specs</a></li>
+        <li><a href="#performance" class="nav-link" data-section="performance">Performance</a></li>
+        <li><a href="#interior" class="nav-link" data-section="interior">Interior</a></li>
+        <li><a href="#technology" class="nav-link" data-section="technology">Technology</a></li>
+        <li><a href="#contact" class="nav-link" data-section="contact">Contact</a></li>
+      </ul>
+
+      <a href="#contact" class="nav-cta" id="nav-cta-btn">Configure Now</a>
+
+      <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- Mobile menu -->
+    <div class="mobile-menu" id="mobile-menu">
+      <ul>
+        <li><a href="#specs" class="mobile-link">Specs</a></li>
+        <li><a href="#performance" class="mobile-link">Performance</a></li>
+        <li><a href="#interior" class="mobile-link">Interior</a></li>
+        <li><a href="#technology" class="mobile-link">Technology</a></li>
+        <li><a href="#contact" class="mobile-link">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ═══════════════════════════════════════ HERO ════ -->
+    <section id="hero" class="hero">
+      <div class="hero-bg">
+        <div class="hero-grid"></div>
+        <div class="hero-particles" id="particles-hero"></div>
+        <div class="hero-glow hero-glow-left"></div>
+        <div class="hero-glow hero-glow-right"></div>
+      </div>
+
+      <div class="hero-content">
+        <div class="hero-badge reveal-up">
+          <span class="badge-dot"></span>
+          <span>New Model · 2026</span>
+        </div>
+        <h1 class="hero-title reveal-up">
+          <span class="hero-title-sub">The New</span>
+          <span class="hero-title-main">BMW M5</span>
+          <span class="hero-title-accent">Competition</span>
+        </h1>
+        <p class="hero-desc reveal-up">
+          627 horsepower. 0–100 km/h in 3.3 seconds. A masterpiece where <br/>
+          raw power meets sophisticated luxury.
+        </p>
+        <div class="hero-stats reveal-up">
+          <div class="hero-stat">
+            <span class="stat-num" data-target="627">0</span>
+            <span class="stat-unit">hp</span>
+            <span class="stat-label">Power Output</span>
+          </div>
+          <div class="hero-stat-divider"></div>
+          <div class="hero-stat">
+            <span class="stat-num" data-target="3" data-decimal=".3">0</span>
+            <span class="stat-unit">sec</span>
+            <span class="stat-label">0 – 100 km/h</span>
+          </div>
+          <div class="hero-stat-divider"></div>
+          <div class="hero-stat">
+            <span class="stat-num" data-target="305">0</span>
+            <span class="stat-unit">km/h</span>
+            <span class="stat-label">Top Speed</span>
+          </div>
+        </div>
+        <div class="hero-ctas reveal-up">
+          <a href="#contact" class="btn btn-primary" id="hero-config-btn">
+            <span>Configure Yours</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#performance" class="btn btn-ghost" id="hero-explore-btn">
+            <span>Explore Performance</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-car-showcase" id="hero-car-showcase">
+        <!-- Autonomous Presentation Status HUD -->
+        <div class="inspection-status-pill" id="inspection-status-pill" aria-live="polite">
+          <span class="status-indicator-dot"></span>
+          <span class="status-mode-text" id="status-mode-text">360° SHOWROOM PRESENTATION</span>
+          <span class="status-step-badge" id="status-step-badge">STAGE 1 / 3</span>
+        </div>
+
+        <div class="car-stage" id="car-stage">
+          <!-- Realistic Circular Showroom Turntable Platform -->
+          <div class="showroom-turntable" id="showroom-turntable">
+            <div class="turntable-surface"></div>
+            <div class="turntable-rim"></div>
+            <div class="turntable-light-ring"></div>
+          </div>
+          <div class="car-shadow-contact"></div>
+          <div class="car-ground-reflection"></div>
+          
+          <!-- Realistic Vehicle Container with Dynamic Lighting -->
+          <div class="car-model-wrapper" id="car-model-wrapper">
+            <img
+              src="assets/images/hero-car.jpg"
+              alt="BMW M5 Competition — Autonomous 360 Automotive Product Showcase"
+              class="hero-car-img"
+              id="hero-car-img"
+            />
+            <div class="car-lighting-overlay" id="car-lighting-overlay"></div>
+          </div>
+
+          <!-- Dynamic SVG Vector Inspection Connector Layer -->
+          <svg class="inspection-svg-canvas" id="inspection-svg-canvas" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#00d4ff"/>
+                <stop offset="100%" stop-color="#1c6ef3"/>
+              </linearGradient>
+              <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="2" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+            <path id="svg-connector-path" class="svg-connector-path" d="" />
+          </svg>
+
+          <!-- Intelligent Callout Overlay Layer -->
+          <div class="inspection-callouts-container" id="inspection-callouts-container">
+            <!-- Callout nodes injected and coordinated via car3d.js -->
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-scroll-hint" id="scroll-hint">
+        <div class="scroll-mouse">
+          <div class="scroll-wheel"></div>
+        </div>
+        <span>Scroll to explore</span>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ SPECS ═══ -->
+    <section id="specs" class="section specs-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag reveal-up">Specifications</span>
+          <h2 class="section-title reveal-up">Engineering <br/><em>Perfection</em></h2>
+          <p class="section-desc reveal-up">Every number tells the story of a machine built without compromise.</p>
+        </div>
+
+        <div class="specs-grid">
+          <div class="spec-card reveal-up" data-delay="0">
+            <div class="spec-icon">
+              <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/><path d="M24 12v12l8 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div class="spec-data">
+              <span class="spec-value counter" data-target="627">0</span>
+              <span class="spec-unit">HP</span>
+            </div>
+            <span class="spec-name">Peak Power</span>
+            <div class="spec-bar"><div class="spec-bar-fill" style="--fill: 95%"></div></div>
+          </div>
+
+          <div class="spec-card reveal-up" data-delay="100">
+            <div class="spec-icon">
+              <svg viewBox="0 0 48 48" fill="none"><path d="M8 40 L24 8 L40 40 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M16 28 L32 28" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <div class="spec-data">
+              <span class="spec-value counter" data-target="750">0</span>
+              <span class="spec-unit">Nm</span>
+            </div>
+            <span class="spec-name">Peak Torque</span>
+            <div class="spec-bar"><div class="spec-bar-fill" style="--fill: 90%"></div></div>
+          </div>
+
+          <div class="spec-card reveal-up" data-delay="200">
+            <div class="spec-icon">
+              <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="28" r="16" stroke="currentColor" stroke-width="2"/><path d="M24 12 V6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 16 L8 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M36 16 L40 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 30 L4 28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M40 30 L44 28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18 28 L24 22 L30 28" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="spec-data">
+              <span class="spec-value">3.3</span>
+              <span class="spec-unit">sec</span>
+            </div>
+            <span class="spec-name">0–100 km/h</span>
+            <div class="spec-bar"><div class="spec-bar-fill" style="--fill: 99%"></div></div>
+          </div>
+
+          <div class="spec-card reveal-up" data-delay="300">
+            <div class="spec-icon">
+              <svg viewBox="0 0 48 48" fill="none"><path d="M6 24 Q24 6 42 24 Q24 42 6 24Z" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="24" r="6" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <div class="spec-data">
+              <span class="spec-value counter" data-target="305">0</span>
+              <span class="spec-unit">km/h</span>
+            </div>
+            <span class="spec-name">Top Speed</span>
+            <div class="spec-bar"><div class="spec-bar-fill" style="--fill: 82%"></div></div>
+          </div>
+
+          <div class="spec-card reveal-up" data-delay="400">
+            <div class="spec-icon">
+              <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="20" width="32" height="18" rx="3" stroke="currentColor" stroke-width="2"/><path d="M16 20 V14 Q24 8 32 14 V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="30" r="3" fill="currentColor"/></svg>
+            </div>
+            <div class="spec-data">
+              <span class="spec-value counter" data-target="8">0</span>
+              <span class="spec-unit">spd</span>
+            </div>
+            <span class="spec-name">M Steptronic</span>
+            <div class="spec-bar"><div class="spec-bar-fill" style="--fill: 75%"></div></div>
+          </div>
+
+          <div class="spec-card reveal-up" data-delay="500">
+            <div class="spec-icon">
+              <svg viewBox="0 0 48 48" fill="none"><path d="M10 38 L10 20 Q10 10 24 10 Q38 10 38 20 V38" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18 38 V28 Q18 24 24 24 Q30 24 30 28 V38" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div class="spec-data">
+              <span class="spec-value counter" data-target="4395">0</span>
+              <span class="spec-unit">cc</span>
+            </div>
+            <span class="spec-name">Engine Displacement</span>
+            <div class="spec-bar"><div class="spec-bar-fill" style="--fill: 70%"></div></div>
+          </div>
+        </div>
+
+        <!-- Full spec table -->
+        <div class="spec-table-wrap reveal-up">
+          <table class="spec-table">
+            <tbody>
+              <tr><td>Engine</td><td>4.4L M TwinPower Turbo V8</td></tr>
+              <tr><td>Drive System</td><td>M xDrive AWD with RWD mode</td></tr>
+              <tr><td>Transmission</td><td>8-speed M Steptronic Sport</td></tr>
+              <tr><td>Fuel Consumption</td><td>11.1 L/100km (combined)</td></tr>
+              <tr><td>CO₂ Emissions</td><td>253 g/km</td></tr>
+              <tr><td>Kerb Weight</td><td>1,975 kg</td></tr>
+              <tr><td>Wheelbase</td><td>2,975 mm</td></tr>
+              <tr><td>Brakes (Front)</td><td>395 mm M Compound</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════ PERFORMANCE ═ -->
+    <section id="performance" class="section performance-section">
+      <div class="perf-bg-overlay"></div>
+      <div class="container">
+        <div class="section-header light">
+          <span class="section-tag reveal-up">Performance</span>
+          <h2 class="section-title reveal-up">Born on the <br/><em>Racetrack</em></h2>
+          <p class="section-desc reveal-up">Every component honed to perfection. Every drive a revelation.</p>
+        </div>
+
+        <div class="perf-layout">
+          <div class="perf-visual reveal-left">
+            <div class="perf-ring-outer">
+              <div class="perf-ring-inner">
+                <span class="perf-ring-val">627</span>
+                <span class="perf-ring-label">HP</span>
+              </div>
+              <svg class="perf-ring-svg" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(28,110,243,0.1)" stroke-width="8"/>
+                <circle cx="100" cy="100" r="90" fill="none" stroke="url(#ringGrad)" stroke-width="8"
+                  stroke-dasharray="565.5" stroke-dashoffset="28" stroke-linecap="round"
+                  transform="rotate(-90 100 100)" class="ring-arc"/>
+                <defs>
+                  <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#1c6ef3"/>
+                    <stop offset="100%" stop-color="#00d4ff"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <div class="perf-badges">
+              <div class="perf-badge">
+                <span>M xDrive</span>
+                <small>All-Wheel Drive</small>
+              </div>
+              <div class="perf-badge">
+                <span>Launch Control</span>
+                <small>Drag Mode Enabled</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="perf-features reveal-right">
+            <div class="perf-feature" id="pf-1">
+              <div class="pf-icon">
+                <svg viewBox="0 0 48 48" fill="none"><path d="M6 38 L20 16 L24 24 L30 10 L42 38 Z" stroke="#1c6ef3" stroke-width="2" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="pf-content">
+                <h3>M TwinPower Turbo</h3>
+                <p>Twin-scroll twin-turbocharging in the V-layout engine delivers explosive power with zero turbo lag — building boost instantly across the full RPM range.</p>
+              </div>
+            </div>
+            <div class="perf-feature" id="pf-2">
+              <div class="pf-icon">
+                <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="10" stroke="#1c6ef3" stroke-width="2"/><path d="M24 4 V10" stroke="#1c6ef3" stroke-width="2" stroke-linecap="round"/><path d="M24 38 V44" stroke="#1c6ef3" stroke-width="2" stroke-linecap="round"/><path d="M4 24 H10" stroke="#1c6ef3" stroke-width="2" stroke-linecap="round"/><path d="M38 24 H44" stroke="#1c6ef3" stroke-width="2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="pf-content">
+                <h3>Active M Differential</h3>
+                <p>Electronically controlled rear differential distributes torque between the rear wheels in milliseconds — maximising traction and cornering precision.</p>
+              </div>
+            </div>
+            <div class="perf-feature" id="pf-3">
+              <div class="pf-icon">
+                <svg viewBox="0 0 48 48" fill="none"><path d="M8 40 L24 8 L40 40" stroke="#1c6ef3" stroke-width="2" stroke-linejoin="round"/><path d="M14 30 H34" stroke="#1c6ef3" stroke-width="2"/></svg>
+              </div>
+              <div class="pf-content">
+                <h3>M Adaptive Suspension</h3>
+                <p>Continuously adjusting dampers read the road 100 times per second — providing racetrack precision or supple grand-touring comfort at the touch of a button.</p>
+              </div>
+            </div>
+            <div class="perf-feature" id="pf-4">
+              <div class="pf-icon">
+                <svg viewBox="0 0 48 48" fill="none"><rect x="6" y="18" width="36" height="20" rx="4" stroke="#1c6ef3" stroke-width="2"/><path d="M16 18 V14 Q24 8 32 14 V18" stroke="#1c6ef3" stroke-width="2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="pf-content">
+                <h3>M Carbon Ceramic Brakes</h3>
+                <p>395mm front discs with 6-piston M Compound calipers provide staggering retardation — fade-free under the most extreme track abuse.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RPM bar -->
+        <div class="rpm-strip reveal-up">
+          <span class="rpm-label">0</span>
+          <div class="rpm-bar" id="rpm-bar">
+            <div class="rpm-fill"></div>
+            <div class="rpm-needle" id="rpm-needle"></div>
+            <div class="rpm-glow"></div>
+          </div>
+          <span class="rpm-label">8,500 RPM</span>
+          <span class="rpm-readout" id="rpm-readout">0 RPM</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ INTERIOR ═ -->
+    <section id="interior" class="section interior-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag reveal-up">Interior Design</span>
+          <h2 class="section-title reveal-up">A Cockpit Built <br/><em>for Champions</em></h2>
+          <p class="section-desc reveal-up">Hand-crafted materials. Intuitive technology. Every detail deliberate.</p>
+        </div>
+
+        <div class="interior-layout">
+          <div class="interior-img-wrap reveal-left">
+            <img src="assets/images/interior.jpg" alt="BMW M5 — Premium Interior with M Sport Steering Wheel and Digital Cockpit" class="interior-img" />
+            <div class="int-img-badge">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v4l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span>Merino Leather</span>
+            </div>
+          </div>
+
+          <div class="interior-features reveal-right">
+            <div class="int-feature">
+              <span class="int-num">01</span>
+              <div>
+                <h3>M Carbon Bucket Seats</h3>
+                <p>Ultra-lightweight carbon-fibre shells wrapped in full Merino leather with integrated 4-point harness points and 14-way electric adjustment.</p>
+              </div>
+            </div>
+            <div class="int-feature">
+              <span class="int-num">02</span>
+              <div>
+                <h3>BMW Curved Display</h3>
+                <p>12.3" driver display meets 14.9" central touchscreen in a seamless glass arc — running BMW iDrive 9 with M-specific layouts and real-time telemetry.</p>
+              </div>
+            </div>
+            <div class="int-feature">
+              <span class="int-num">03</span>
+              <div>
+                <h3>M-Specific Steering Wheel</h3>
+                <p>Flat-bottom M Sport wheel houses shortcut buttons for DSC, engine sound mode and M memory buttons — putting the entire drive program at your fingertips.</p>
+              </div>
+            </div>
+            <div class="int-feature">
+              <span class="int-num">04</span>
+              <div>
+                <h3>Ambient Light Suite</h3>
+                <p>40-colour ambient illumination with M-specific glow cycles transforms the cabin at night — enhancing the premium atmosphere and spatial perception.</p>
+              </div>
+            </div>
+
+            <div class="int-palette">
+              <span class="int-palette-label">Interior Colours</span>
+              <div class="int-palette-swatches">
+                <button class="swatch active" style="background:#0a0a0a;" title="Obsidian Black" id="sw-black"></button>
+                <button class="swatch" style="background:#2c2030;" title="Mocha Brown" id="sw-mocha"></button>
+                <button class="swatch" style="background:#1a2a40;" title="Night Blue" id="sw-blue"></button>
+                <button class="swatch" style="background:#3a3030;" title="Cognac" id="sw-cognac"></button>
+                <button class="swatch" style="background:#e8e0d0;" title="Ivory White" id="sw-white"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ TECHNOLOGY ═ -->
+    <section id="technology" class="section tech-section">
+      <div class="tech-bg">
+        <div class="tech-grid-anim"></div>
+      </div>
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag reveal-up">Technology</span>
+          <h2 class="section-title reveal-up">Intelligence <br/><em>Redefined</em></h2>
+          <p class="section-desc reveal-up">Where silicon meets horsepower — the most connected M ever built.</p>
+        </div>
+
+        <div class="tech-cards">
+          <div class="tech-card reveal-up" data-delay="0" id="tc-1">
+            <div class="tc-icon">
+              <svg viewBox="0 0 64 64" fill="none"><rect x="8" y="20" width="48" height="30" rx="4" stroke="currentColor" stroke-width="2"/><path d="M20 20 V14 Q32 8 44 14 V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="32" cy="35" r="6" stroke="currentColor" stroke-width="2"/><path d="M32 29 V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <h3>BMW Operating System 9</h3>
+            <p>The most intelligent iDrive yet — with natural language AI assistant, Over-the-Air updates, and personalised M driver profiles that sync across all your BMW vehicles.</p>
+            <div class="tc-tags"><span>OTA Updates</span><span>AI Assistant</span></div>
+          </div>
+
+          <div class="tech-card reveal-up" data-delay="150" id="tc-2">
+            <div class="tc-icon">
+              <svg viewBox="0 0 64 64" fill="none"><path d="M32 8 Q50 16 50 32 T32 56 Q14 48 14 32 T32 8Z" stroke="currentColor" stroke-width="2"/><path d="M32 20 Q42 26 42 32 T32 44 Q22 38 22 32 T32 20Z" stroke="currentColor" stroke-width="2"/><circle cx="32" cy="32" r="4" fill="currentColor"/></svg>
+            </div>
+            <h3>M Traction & Stability Suite</h3>
+            <p>10-stage DSC with corner brake control, M launch control and the exclusive M Drift Analyser — record, score and share your drifts directly from the car.</p>
+            <div class="tc-tags"><span>10-Stage DSC</span><span>Drift Analyser</span></div>
+          </div>
+
+          <div class="tech-card reveal-up" data-delay="300" id="tc-3">
+            <div class="tc-icon">
+              <svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="22" stroke="currentColor" stroke-width="2"/><path d="M32 10 V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10 32 H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M44 32 H54" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M32 44 V54" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M20 20 L27 27" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M44 20 L37 27" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="32" cy="32" r="6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <h3>M Driver's Package</h3>
+            <p>Unlocks the electronically governed top speed up to 305 km/h — plus the M Track Package with Nürburgring data recording and professional driver coaching.</p>
+            <div class="tc-tags"><span>305 km/h</span><span>Track Recording</span></div>
+          </div>
+
+          <div class="tech-card reveal-up" data-delay="450" id="tc-4">
+            <div class="tc-icon">
+              <svg viewBox="0 0 64 64" fill="none"><path d="M12 48 Q20 28 32 32 Q44 36 52 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="32" cy="32" r="4" fill="#1c6ef3"/><path d="M8 56 H56" stroke="currentColor" stroke-width="1" opacity="0.3"/></svg>
+            </div>
+            <h3>M Lap Timer & Telemetry</h3>
+            <p>Professional-grade lap timing with GPS-accurate sector splits, G-force visualisation, throttle/brake trace overlay and video sync via the BMW M Track app.</p>
+            <div class="tc-tags"><span>GPS Timing</span><span>G-Force Map</span></div>
+          </div>
+
+          <div class="tech-card reveal-up" data-delay="600" id="tc-5">
+            <div class="tc-icon">
+              <svg viewBox="0 0 64 64" fill="none"><path d="M32 8 L32 32 L44 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="32" r="24" stroke="currentColor" stroke-width="2" stroke-dasharray="6 4"/></svg>
+            </div>
+            <h3>Head-Up Display</h3>
+            <p>Extended reality HUD projects speed, navigation and M telemetry data directly onto the windscreen — keeping eyes on the road at all times.</p>
+            <div class="tc-tags"><span>AR Projection</span><span>M Telemetry</span></div>
+          </div>
+
+          <div class="tech-card reveal-up" data-delay="750" id="tc-6">
+            <div class="tc-icon">
+              <svg viewBox="0 0 64 64" fill="none"><path d="M24 32 Q24 24 32 24 Q40 24 40 32 Q40 48 32 56 Q24 48 24 32Z" stroke="currentColor" stroke-width="2"/><path d="M18 26 Q18 14 32 14 Q46 14 46 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 22 Q12 8 32 8 Q52 8 52 22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <h3>Bowers & Wilkins Diamond Audio</h3>
+            <p>20-speaker, 1,500-watt Diamond surround system with aluminium tweeters and a dedicated subwoofer — concert hall acoustics at 300 km/h.</p>
+            <div class="tc-tags"><span>20 Speakers</span><span>1,500W</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ CONTACT ══ -->
+    <section id="contact" class="section contact-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag reveal-up">Configure &amp; Book</span>
+          <h2 class="section-title reveal-up">Your M5 <br/><em>Awaits</em></h2>
+          <p class="section-desc reveal-up">Book a personalised test drive or begin your bespoke configuration today.</p>
+        </div>
+
+        <div class="contact-layout">
+          <div class="contact-form-wrap reveal-left">
+            <form class="contact-form" id="contact-form" novalidate>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="fname">First Name</label>
+                  <input type="text" id="fname" name="fname" placeholder="John" required />
+                  <span class="form-error" id="fname-err"></span>
+                </div>
+                <div class="form-group">
+                  <label for="lname">Last Name</label>
+                  <input type="text" id="lname" name="lname" placeholder="Doe" required />
+                  <span class="form-error" id="lname-err"></span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="john@example.com" required />
+                <span class="form-error" id="email-err"></span>
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000" />
+              </div>
+              <div class="form-group">
+                <label for="interest">I'm interested in</label>
+                <select id="interest" name="interest">
+                  <option value="">Select an option...</option>
+                  <option value="test-drive">Test Drive</option>
+                  <option value="configure">Custom Configuration</option>
+                  <option value="financing">Financing Options</option>
+                  <option value="trade-in">Trade-In Assessment</option>
+                  <option value="fleet">Fleet / Corporate</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="4" placeholder="Tell us about your ideal M5..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary btn-full" id="form-submit-btn">
+                <span>Send Request</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+              </button>
+              <div class="form-success" id="form-success">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17L4 12"/></svg>
+                <span>Request sent! A BMW specialist will contact you within 24 hours.</span>
+              </div>
+            </form>
+          </div>
+
+          <div class="contact-info reveal-right">
+            <div class="contact-info-card">
+              <h3>Visit Our Experience Centre</h3>
+              <div class="contact-detail">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                <div>
+                  <strong>BMW M Experience Centre</strong>
+                  <span>1 BMW Drive, Munich, Germany 80788</span>
+                </div>
+              </div>
+              <div class="contact-detail">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.14 1.18 2 2 0 012.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l.56-.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 15.92z"/></svg>
+                <div>
+                  <strong>Sales Hotline</strong>
+                  <span>+49 89 382 0</span>
+                </div>
+              </div>
+              <div class="contact-detail">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <div>
+                  <strong>Email</strong>
+                  <span>m-sales@bmw.com</span>
+                </div>
+              </div>
+              <div class="contact-hours">
+                <h4>Opening Hours</h4>
+                <div class="hours-grid">
+                  <span>Monday – Friday</span><span>09:00 – 18:00</span>
+                  <span>Saturday</span><span>10:00 – 16:00</span>
+                  <span>Sunday</span><span>Closed</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-links">
+              <a href="#" class="social-link" id="soc-fb" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+              </a>
+              <a href="#" class="social-link" id="soc-ig" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              </a>
+              <a href="#" class="social-link" id="soc-yt" aria-label="YouTube">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.95C18.88 4 12 4 12 4s-6.88 0-8.59.47a2.78 2.78 0 00-1.95 1.95C1 8.12 1 12 1 12s0 3.88.46 5.58a2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95C23 15.88 23 12 23 12s0-3.88-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor"/></svg>
+              </a>
+              <a href="#" class="social-link" id="soc-tw" aria-label="Twitter/X">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ ENGINEERING MODAL ═══ -->
+    <div id="tech-modal" class="tech-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+      <div class="modal-backdrop" id="modal-backdrop"></div>
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="modal-header-badge">
+            <span class="modal-badge-dot"></span>
+            <span id="modal-category">ENGINEERING SPECIFICATION</span>
+          </div>
+          <button class="modal-close" id="modal-close-btn" aria-label="Close modal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h3 class="modal-title" id="modal-title">Component Title</h3>
+          <p class="modal-subtitle" id="modal-subtitle">Technical Overview &amp; Operating Principle</p>
+
+          <div class="modal-tabs" id="modal-tabs" role="tablist">
+            <button class="modal-tab active" data-tab="overview" role="tab">Overview &amp; Architecture</button>
+            <button class="modal-tab" data-tab="principles" role="tab">Operating Principles</button>
+            <button class="modal-tab" data-tab="dynamics" role="tab">Performance Dynamics</button>
+          </div>
+
+          <div class="modal-content-panel active" id="tab-overview">
+            <div class="modal-data-grid" id="modal-data-grid">
+              <!-- Dynamically populated technical attributes -->
+            </div>
+            <div class="modal-description" id="modal-desc-text">
+              <!-- Deep technical explanation -->
+            </div>
+          </div>
+
+          <div class="modal-content-panel" id="tab-principles">
+            <div class="modal-description" id="modal-principles-text">
+              <!-- Operating principle & thermal engineering -->
+            </div>
+          </div>
+
+          <div class="modal-content-panel" id="tab-dynamics">
+            <div class="modal-description" id="modal-dynamics-text">
+              <!-- Performance considerations & safety role -->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <span class="modal-doc-id">DOC: BMW-M-SPEC-2026 // ENGINEERING PORTFOLIO</span>
+          <button class="btn btn-ghost modal-action-btn" id="modal-dismiss-btn">Dismiss</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════ FOOTER ═══ -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo-text">BMW <em>M5</em></span>
+          <p>Sheer Driving Pleasure since 1916.<br/>The Ultimate Driving Machine.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Engineering Systems</h4>
+          <ul>
+            <li><a href="#specs" class="open-system-modal" data-system="engine">M TwinPower Turbo</a></li>
+            <li><a href="#specs" class="open-system-modal" data-system="braking">Compound Brakes</a></li>
+            <li><a href="#performance" class="open-system-modal" data-system="suspension">Adaptive Suspension</a></li>
+            <li><a href="#performance" class="open-system-modal" data-system="aerodynamics">Active Aero System</a></li>
+            <li><a href="#interior" class="open-system-modal" data-system="cockpit">Curved Cockpit</a></li>
+            <li><a href="#technology" class="open-system-modal" data-system="safety">Active Safety Suite</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Showroom Experience</h4>
+          <ul>
+            <li><a href="#hero">Autonomous 360° View</a></li>
+            <li><a href="#specs">Technical Telemetry</a></li>
+            <li><a href="#performance">Powertrain Dynamics</a></li>
+            <li><a href="#interior">Interior Craftsmanship</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Technology Stack</h4>
+          <ul>
+            <li><a href="#">Autonomous 360 Turntable</a></li>
+            <li><a href="#">Dynamic SVG Connectors</a></li>
+            <li><a href="#">Responsive Viewport HUD</a></li>
+            <li><a href="#">Vanilla JS Architecture</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <div class="footer-credit">
+          <p class="credit-author">Built by <strong>Mohamed Fazil</strong></p>
+          <p class="credit-tagline">Designed &amp; Developed with a passion for automotive technology.</p>
+        </div>
+        <div class="footer-rights">
+          <span>&copy; 2026 BMW M Automotive Demonstration. Crafted for high-performance presentation.</span>
+          <div class="footer-legal">
+            <a href="#specs">Engineering Specs</a>
+            <a href="#performance">Dynamics</a>
+            <a href="#technology">Telematics</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/car3d.js"></script>
+</body>
+</html>
