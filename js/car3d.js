@@ -80,7 +80,7 @@
 
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.18;
+  renderer.toneMappingExposure = 1.32;
 
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -109,6 +109,24 @@
   const redRim = new THREE.PointLight(0xff1838, 6.5, 10, 2);
   redRim.position.set(3.8, 2.4, -3.2);
   scene.add(redRim);
+
+  const frontSoftbox = new THREE.SpotLight(0xffffff, 12, 16, Math.PI / 7, 0.55, 1.4);
+  frontSoftbox.position.set(0, 5.5, 6.5);
+  frontSoftbox.target.position.set(0, 0.8, 0);
+  scene.add(frontSoftbox);
+  scene.add(frontSoftbox.target);
+
+  const sideSoftbox = new THREE.SpotLight(0xbdd8ff, 9, 14, Math.PI / 6, 0.6, 1.5);
+  sideSoftbox.position.set(-6, 3.5, 2.5);
+  sideSoftbox.target.position.set(0, 0.8, 0);
+  scene.add(sideSoftbox);
+  scene.add(sideSoftbox.target);
+
+  const rearRedSoftbox = new THREE.SpotLight(0xff1638, 8, 14, Math.PI / 6, 0.65, 1.6);
+  rearRedSoftbox.position.set(5.5, 3.0, -4.5);
+  rearRedSoftbox.target.position.set(0, 0.9, 0);
+  scene.add(rearRedSoftbox);
+  scene.add(rearRedSoftbox.target);
 
   // Thin luminous background bars reproduce the blue/red studio streaks.
   const blueBar = new THREE.Mesh(
@@ -226,61 +244,109 @@
 
       carRoot.add(carModel);
 
-      // Collect all meshes.
+      // Collect meshes and build a reliable automotive material pass.
+      // The source M5 asset uses light/white paint. For the requested hero treatment,
+      // force the exterior paint to deep gloss black while preserving glass, lamps,
+      // tyres, chrome and other recognizable details.
       carModel.traverse(function(object) {
+        if (!object.isMesh) return;
 
-        if (object.isMesh) {
+        modelMeshes.push(object);
+        object.castShadow = true;
+        object.receiveShadow = true;
 
-          modelMeshes.push(object);
+        const objectLabel = (object.name || '').toLowerCase();
+        const materials = Array.isArray(object.material)
+          ? object.material
+          : [object.material];
 
+        materials.forEach(function(material) {
+          if (!material) return;
 
-          const objectLabel = (object.name || '').toLowerCase();
-          const isBodyPiece =
-            /body|hood|bonnet|trunk|door|fender|bumper|roof|quarter|side|skirt|panel/.test(objectLabel);
+          const materialLabel = (material.name || '').toLowerCase();
+          const label = objectLabel + ' ' + materialLabel;
 
-          if (isBodyPiece && object.material) {
-            const materials = Array.isArray(object.material)
-              ? object.material
-              : [object.material];
+          const isLamp =
+            /head.?light|headlamp|led|light|lamp|taillight|tail.?light|indicator|turn.?signal/.test(label);
 
-            materials.forEach(material => {
-              if (!material) return;
-              // Preserve the GLB's original paint tone; only refine its PBR response.
-              if (material.color && material.color.getHex() < 0x080808) {
-                material.color.setHex(0x11141a);
-              }
-              if ('metalness' in material) material.metalness = Math.max(material.metalness || 0, 0.68);
-              if ('roughness' in material) material.roughness = Math.min(material.roughness ?? 0.32, 0.22);
+          const isGlass =
+            /glass|window|windshield|windscreen|mirror.?glass/.test(label);
 
-              // Realistic black-car reflections: bright edge highlights instead of a flat silhouette.
-              if (material.emissive) {
-                material.emissive.setHex(0x000000);
-                material.emissiveIntensity = 0;
-              }
+          const isTyre =
+            /tyre|tire|rubber/.test(label);
 
-              material.needsUpdate = true;
-            });
-          }
+          const isBrake =
+            /brake|caliper|disc|rotor/.test(label);
 
-          object.castShadow = true;
-          object.receiveShadow = true;
+          const isChrome =
+            /chrome|grille|kidney|metal|trim|exhaust|badge|logo/.test(label);
 
-          if (object.material) {
+          const isInterior =
+            /seat|dashboard|interior|cockpit|steering|console|carpet|door.?panel/.test(label);
 
-            if (Array.isArray(object.material)) {
+          const isWheel =
+            /wheel|rim|alloy/.test(label);
 
-              object.material.forEach(material => {
-                if (material) {
-                  material.needsUpdate = true;
-                }
-              });
-
-            } else {
-
-              object.material.needsUpdate = true;
+          // Exterior paint: rich black, glossy, metallic.
+          // Interior is kept dark but slightly less reflective.
+          if (!isLamp && !isGlass && !isTyre && !isBrake && !isChrome && !isWheel) {
+            if (material.color) {
+              material.color.setHex(isInterior ? 0x07090d : 0x080b10);
+            }
+            if ('metalness' in material) {
+              material.metalness = isInterior ? 0.28 : 0.78;
+            }
+            if ('roughness' in material) {
+              material.roughness = isInterior ? 0.3 : 0.17;
             }
           }
-        }
+
+          if (isWheel) {
+            if (material.color) material.color.setHex(0x090b0f);
+            if ('metalness' in material) material.metalness = 0.88;
+            if ('roughness' in material) material.roughness = 0.2;
+          }
+
+          if (isTyre) {
+            if (material.color) material.color.setHex(0x030405);
+            if ('metalness' in material) material.metalness = 0.05;
+            if ('roughness' in material) material.roughness = 0.72;
+          }
+
+          if (isBrake) {
+            if (material.color) material.color.setHex(0xb30c1b);
+            if ('metalness' in material) material.metalness = 0.72;
+            if ('roughness' in material) material.roughness = 0.2;
+          }
+
+          if (isChrome) {
+            if (material.color && /grille|kidney/.test(label)) {
+              material.color.setHex(0x030405);
+            }
+            if ('metalness' in material) material.metalness = 0.92;
+            if ('roughness' in material) material.roughness = 0.16;
+          }
+
+          if (isGlass) {
+            if (material.color) material.color.setHex(0x071018);
+            if ('metalness' in material) material.metalness = 0.12;
+            if ('roughness' in material) material.roughness = 0.08;
+            if ('transparent' in material) material.transparent = true;
+            if ('opacity' in material) material.opacity = Math.min(material.opacity || 1, 0.72);
+          }
+
+          if (isLamp) {
+            if (material.color) material.color.setHex(0xdff6ff);
+            if (material.emissive) {
+              material.emissive.setHex(0xc9efff);
+              material.emissiveIntensity = 3.5;
+            }
+            if ('metalness' in material) material.metalness = 0.05;
+            if ('roughness' in material) material.roughness = 0.08;
+          }
+
+          material.needsUpdate = true;
+        });
       });
 
       // ─── REALISTIC VEHICLE LIGHTING / DETAIL MATERIALS ───────
