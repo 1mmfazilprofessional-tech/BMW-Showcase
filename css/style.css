@@ -1736,3 +1736,29 @@ body.cursor-hover .cursor-follower { width: 48px; height: 48px; border-color: va
     transform: translateX(-50%) translateY(0) !important;
   }
 }
+
+
+/* ── REAL 3D AUTOMOTIVE HERO ───────────────────────────────── */
+#bmw-3d-container {
+  position: relative;
+  width: 100%;
+  min-height: 560px;
+  height: clamp(500px, 58vw, 650px);
+  overflow: visible;
+  isolation: isolate;
+}
+#bmw-3d-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  z-index: 2;
+}
+.car-3d-loading { z-index: 20; }
+@media (max-width: 900px) {
+  #bmw-3d-container { min-height: 460px; height: 500px; }
+}
+@media (max-width: 640px) {
+  #bmw-3d-container { min-height: 380px; height: 420px; }
+}
