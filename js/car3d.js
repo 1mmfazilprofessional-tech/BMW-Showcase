@@ -80,25 +80,25 @@
 
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.45;
+  renderer.toneMappingExposure = 1.0;
 
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   // ─── CINEMATIC AUTOMOTIVE STUDIO LIGHTING ───────────────────
-  const ambientLight = new THREE.HemisphereLight(0xeaf2ff, 0x030509, 1.15);
+  const ambientLight = new THREE.HemisphereLight(0xc7d8ee, 0x020307, 0.65);
   scene.add(ambientLight);
 
-  const keyLight = new THREE.DirectionalLight(0xffffff, 5.2);
+  const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
   keyLight.position.set(4.5, 6.5, 5.5);
   keyLight.castShadow = true;
   scene.add(keyLight);
 
-  const softbox = new THREE.DirectionalLight(0xbfd8ff, 3.4);
+  const softbox = new THREE.DirectionalLight(0xbfd8ff, 1.7);
   softbox.position.set(-5.5, 4.0, 3.5);
   scene.add(softbox);
 
-  const roofLight = new THREE.DirectionalLight(0xffffff, 2.8);
+  const roofLight = new THREE.DirectionalLight(0xffffff, 1.1);
   roofLight.position.set(0, 8, 1);
   scene.add(roofLight);
 
@@ -110,19 +110,19 @@
   redRim.position.set(3.8, 2.4, -3.2);
   scene.add(redRim);
 
-  const frontSoftbox = new THREE.SpotLight(0xffffff, 12, 16, Math.PI / 7, 0.55, 1.4);
+  const frontSoftbox = new THREE.SpotLight(0xffffff, 4.0, 16, Math.PI / 7, 0.55, 1.4);
   frontSoftbox.position.set(0, 5.5, 6.5);
   frontSoftbox.target.position.set(0, 0.8, 0);
   scene.add(frontSoftbox);
   scene.add(frontSoftbox.target);
 
-  const sideSoftbox = new THREE.SpotLight(0xbdd8ff, 9, 14, Math.PI / 6, 0.6, 1.5);
+  const sideSoftbox = new THREE.SpotLight(0xbdd8ff, 3.2, 14, Math.PI / 6, 0.6, 1.5);
   sideSoftbox.position.set(-6, 3.5, 2.5);
   sideSoftbox.target.position.set(0, 0.8, 0);
   scene.add(sideSoftbox);
   scene.add(sideSoftbox.target);
 
-  const rearRedSoftbox = new THREE.SpotLight(0xff1638, 8, 14, Math.PI / 6, 0.65, 1.6);
+  const rearRedSoftbox = new THREE.SpotLight(0xff1638, 3.5, 14, Math.PI / 6, 0.65, 1.6);
   rearRedSoftbox.position.set(5.5, 3.0, -4.5);
   rearRedSoftbox.target.position.set(0, 0.9, 0);
   scene.add(rearRedSoftbox);
@@ -242,7 +242,7 @@
   ringInner.position.y = 0.115;
   scene.add(ringInner);
 
-  const bluePlatformLight = new THREE.PointLight(0x1688ff, 4.5, 9, 2);
+  const bluePlatformLight = new THREE.PointLight(0x1688ff, 3.2, 9, 2);
   bluePlatformLight.position.set(0, 0.55, 0);
   scene.add(bluePlatformLight);
 
@@ -381,19 +381,19 @@
               material.map = null;
             }
             if (material.color) {
-              material.color.setHex(0x030407);
+              material.color.setHex(0x010204);
             }
             if ('metalness' in material) {
-              material.metalness = 0.9;
+              material.metalness = 0.62;
             }
             if ('roughness' in material) {
-              material.roughness = 0.105;
+              material.roughness = 0.2;
             }
             if ('envMapIntensity' in material) {
-              material.envMapIntensity = 2.2;
+              material.envMapIntensity = 0.75;
             }
             if ('clearcoat' in material) {
-              material.clearcoat = 1;
+              material.clearcoat = 0.8;
               material.clearcoatRoughness = 0.08;
             }
           } else if (!isLamp && !isGlass && !isTyre && !isBrake && !isChrome && !isWheel) {
