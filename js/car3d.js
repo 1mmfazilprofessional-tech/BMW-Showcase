@@ -80,7 +80,7 @@
 
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.32;
+  renderer.toneMappingExposure = 1.45;
 
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -136,6 +136,34 @@
   blueBar.position.set(-2.6, 2.2, -3.8);
   blueBar.rotation.z = -0.22;
   scene.add(blueBar);
+
+  const blueGlowBar = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.55, 5.6),
+    new THREE.MeshBasicMaterial({
+      color: 0x087fff,
+      transparent: true,
+      opacity: 0.08,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    })
+  );
+  blueGlowBar.position.set(-2.6, 2.2, -3.72);
+  blueGlowBar.rotation.z = -0.22;
+  scene.add(blueGlowBar);
+
+  const redGlowBar = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.5, 5.2),
+    new THREE.MeshBasicMaterial({
+      color: 0xff1744,
+      transparent: true,
+      opacity: 0.07,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    })
+  );
+  redGlowBar.position.set(2.7, 2.0, -3.68);
+  redGlowBar.rotation.z = 0.25;
+  scene.add(redGlowBar);
 
   const redBar = new THREE.Mesh(
     new THREE.PlaneGeometry(0.16, 4.2),
@@ -214,9 +242,51 @@
   ringInner.position.y = 0.115;
   scene.add(ringInner);
 
-  const bluePlatformLight = new THREE.PointLight(0x1688ff, 2.5, 8, 2);
-  bluePlatformLight.position.set(0, 0.6, 0);
+  const bluePlatformLight = new THREE.PointLight(0x1688ff, 4.5, 9, 2);
+  bluePlatformLight.position.set(0, 0.55, 0);
   scene.add(bluePlatformLight);
+
+  // Strong electric-blue underglow, matching the reference showroom stage.
+  [
+    [-2.9, 0.28, 0],
+    [ 2.9, 0.28, 0],
+    [ 0, 0.28, 2.9],
+    [ 0, 0.28,-2.9]
+  ].forEach(function(position) {
+    const glow = new THREE.PointLight(0x008cff, 3.2, 4.2, 2);
+    glow.position.set(position[0], position[1], position[2]);
+    scene.add(glow);
+  });
+
+  const ringGlow = new THREE.MeshBasicMaterial({
+    color: 0x009dff,
+    transparent: true,
+    opacity: 0.82,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+
+  const ringGlowOuter = new THREE.Mesh(
+    new THREE.TorusGeometry(3.47, 0.055, 16, 160),
+    ringGlow
+  );
+  ringGlowOuter.rotation.x = Math.PI / 2;
+  ringGlowOuter.position.y = 0.105;
+  scene.add(ringGlowOuter);
+
+  const ringGlowInner = new THREE.Mesh(
+    new THREE.TorusGeometry(3.12, 0.022, 12, 160),
+    new THREE.MeshBasicMaterial({
+      color: 0x22c7ff,
+      transparent: true,
+      opacity: 0.72,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    })
+  );
+  ringGlowInner.rotation.x = Math.PI / 2;
+  ringGlowInner.position.y = 0.11;
+  scene.add(ringGlowInner);
 
   // ─── BMW MODEL ROOT ──────────────────────────────────────────
   const carRoot = new THREE.Group();
@@ -317,10 +387,14 @@
               material.metalness = 0.9;
             }
             if ('roughness' in material) {
-              material.roughness = 0.14;
+              material.roughness = 0.105;
             }
             if ('envMapIntensity' in material) {
-              material.envMapIntensity = 1.6;
+              material.envMapIntensity = 2.2;
+            }
+            if ('clearcoat' in material) {
+              material.clearcoat = 1;
+              material.clearcoatRoughness = 0.08;
             }
           } else if (!isLamp && !isGlass && !isTyre && !isBrake && !isChrome && !isWheel) {
             if (material.color) {
@@ -875,8 +949,8 @@
   let currentCameraTarget =
     new THREE.Vector3(0, 1, 0);
 
-  const ENTRANCE_DURATION = 1800;
-  const ROTATION_DURATION = 8500;
+  const ENTRANCE_DURATION = 1400;
+  const ROTATION_DURATION = 6500;
   const PAUSE_DURATION = 6000;
   const PART_DURATION = 3600;
 
