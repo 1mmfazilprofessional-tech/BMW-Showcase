@@ -301,10 +301,10 @@
 
   // ─── MODEL LOADER ────────────────────────────────────────────
   const loader = new THREE.GLTFLoader();
-
-  const MODEL_URL =
-    'https://raw.githubusercontent.com/VIHAR2212/open-road/main/public/models/2022_bmw_m5_cs.glb';
-
+   
+const MODEL_URL =
+  'assets/models/bmw_m5_showroom.glb';
+ 
   loader.load(
     MODEL_URL,
 
