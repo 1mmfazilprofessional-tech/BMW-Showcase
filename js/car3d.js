@@ -306,9 +306,9 @@ const MODEL_URL =
   'https://raw.githubusercontent.com/1mmfazilprofessional-tech/BMW-Showcase/main/assets/models/bmw_m4_competition_m_package.glb';
  
   loader.load(
-    MODEL_URL,
+      MODEL_URL,
 
-    function onLoad(gltf) {
+      function onLoad(gltf) {
 
       carModel = gltf.scene;
 
@@ -576,9 +576,18 @@ const MODEL_URL =
     function onError(error) {
 
       console.error(
-        'BMW GLB failed to load:',
+        'BMW GLB failed from source',
+        modelSourceIndex + 1,
+        MODEL_URL,
         error
       );
+
+      if (modelSourceIndex < MODEL_URLS.length - 1) {
+        modelSourceIndex += 1;
+        console.warn('BMW GLB: trying fallback source');
+        loadBMWModel();
+        return;
+      }
 
       if (loading) {
         loading.classList.add('hidden');
@@ -586,10 +595,13 @@ const MODEL_URL =
 
       updateStatus(
         '3D MODEL LOAD ERROR',
-        'CHECK MODEL PATH'
+        'MODEL DOWNLOAD FAILED'
       );
     }
   );
+  }
+
+  loadBMWModel();
 
   // ─── VEHICLE PART DEFINITIONS ────────────────────────────────
   const vehicleParts = [
