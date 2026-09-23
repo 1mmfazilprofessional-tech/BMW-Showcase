@@ -568,9 +568,6 @@ const MODEL_URLS = [
       startPresentation();
     },
 
-    
-    },
-
     function onProgress(xhr) {
 
       if (xhr.lengthComputable) {
