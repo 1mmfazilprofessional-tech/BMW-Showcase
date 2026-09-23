@@ -302,10 +302,19 @@
   // ─── MODEL LOADER ────────────────────────────────────────────
   const loader = new THREE.GLTFLoader();
    
-const MODEL_URL =
-  'https://raw.githubusercontent.com/1mmfazilprofessional-tech/BMW-Showcase/main/assets/models/bmw_m4_competition_m_package.glb';
- 
-  loader.load(
+const MODEL_URLS = [
+    'assets/models/bmw_m4_competition_m_package.glb',
+    'https://raw.githubusercontent.com/1mmfazilprofessional-tech/BMW-Showcase/main/assets/models/bmw_m4_competition_m_package.glb'
+  ];
+
+  let modelSourceIndex = 0;
+
+  function loadBMWModel() {
+    const MODEL_URL = MODEL_URLS[modelSourceIndex];
+
+    console.log('BMW GLB: trying source', modelSourceIndex + 1, MODEL_URL);
+
+    loader.load(
       MODEL_URL,
 
       function onLoad(gltf) {
@@ -557,6 +566,9 @@ const MODEL_URL =
       );
 
       startPresentation();
+    },
+
+    
     },
 
     function onProgress(xhr) {
