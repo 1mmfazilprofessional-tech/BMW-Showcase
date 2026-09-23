@@ -303,7 +303,7 @@
   const loader = new THREE.GLTFLoader();
    
 const MODEL_URL =
-  'assets/models/bmw_m5_showroom_optimized_50.glb';
+  'assets/models/bmw_m4_competition_m_package.glb';
  
   loader.load(
     MODEL_URL,
